@@ -1,98 +1,53 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+Day 1
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
-```
-
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Backend Development là gì và tại sao nó quan trọng trong phát triển ứng dụng?
+  - Backend Development (Phát triển Backend) là quá trình xây dựng và duy trì phần "hậu trường" của một ứng dụng hoặc trang web. Đây là phần không hiển thị với người dùng nhưng chịu trách nhiệm xử lý logic, lưu trữ dữ liệu và giao tiếp giữa máy chủ và giao diện người dùng
+  - Backend Development đóng vai trò quan trọng trong phát triển ứng dụng vì nó đảm bảo tính ổn định, bảo mật và hiệu suất của hệ thống.
+    - Xử lý Logic
+    - Quản lý Dữ liệu và Cơ sở Dữ liệu
+    - Giao tiếp với Frontend thông qua API
+    - Bảo mật và Xác thực Người Dùng
+    - Quản lý Tải và Hiệu Suất Hệ Thống
+    - Tích hợp với Dịch vụ Khác
+    - Đảm bảo Tính Linh Hoạt và Khả Năng Mở Rộng
+- Các thành phần chính của một hệ thống backend?
+  - Máy chủ (Server)
+  - Cơ sở dữ liệu (Database)
+  - API (Application Programming Interface)
+  - Authentication & Authorization (Xác thực & Phân quyền)
+  - Caching (Bộ nhớ đệm)
+  - Message Queue & Event Processing (Hàng đợi tin nhắn & Xử lý sự kiện)
+  - Logging & Monitoring (Ghi log & Giám sát hệ thống)
+  - Microservices & Containerization
+  - DevOps & CI/CD (Triển khai và tự động hóa)
+- Sự khác biệt giữa backend và frontend?
+  - Frontend và backend là hai khía cạnh then chốt của mọi ứng dụng. Frontend là những gì người dùng nhìn thấy và bao gồm các phần tử trực quan như nút, hộp kiểm, đồ họa và thông điệp văn bản. Frontend cho phép người dùng tương tác với ứng dụng của bạn. Backend là dữ liệu và cơ sở hạ tầng giúp ứng dụng của bạn hoạt động.
+- TypeScript là gì?
+  - TypeScript (ts) là một ngôn ngữ lập trình mở rộng từ JavaScript, bổ sung hệ thống kiểu tĩnh và hỗ trợ các tính năng như interfaces và generics. Typescript giúp bạn phát hiện lỗi ngay ở giai đoạn biên dịch (compile-time) thay vì đợi đến lúc chạy chương trình (runtime), từ đó tăng độ an toàn và giảm thiểu lỗi cho lập trình viên.
+  - Một lợi thế lớn của TypeScript là khả năng tương thích hoàn toàn với JavaScript. Điều này có nghĩa là bạn có thể sử dụng code JavaScript hiện có trong TypeScript mà không cần chỉnh sửa hay viết lại từ đầu. Nhờ vậy, quá trình chuyển đổi từ JavaScript sang TypeScript trở nên dễ dàng và linh hoạt hơn, cho phép bạn dần dần áp dụng các tính năng của TypeScript mà không cần phải thay đổi toàn bộ code ngay lập tức.
+- Redis là gì ?
+  - Redis (REmote DIctionary Server) là một mã nguồn mở được dùng để lưu trữ dữ liệu có cấu trúc, có thể sử dụng như một database, bộ nhớ cache hay một message broker.
+- NestJS là gì?
+  - NestJS là một framework mã nguồn mở để phát triển ứng dụng server-side (backend applications) bằng ngôn ngữ TypeScript hoặc JavaScript. Nó được xây dựng trên cơ sở của Node.js và sử dụng các khái niệm từ TypeScript để tạo ra một môi trường phát triển hiện đại và mạnh mẽ cho việc xây dựng các ứng dụng web và API.
+- ESLint là gì?
+  - ESLint là công cụ kiểm tra mã nguồn JavaScript mở rộng được sử dụng rộng rãi trong cộng đồng phát triển phần mềm. Nền tảng cung cấp các nguồn mã phân tích quy tắc nhằm hỗ trợ người dùng phát hiện cú pháp lỗi, cấu trúc không tốt. Từ đó, nó đảm bảo rằng JavaScript mã hóa được viết theo chuẩn quy tắc tốt nhất.
+- Prettier là gì?
+  - Prettier là một công cụ để format code tự động. Nó cho phép bạn thống nhất phong cách code chung của cả nhóm để có thể cho ra những đoạn code đẹp, ngay hàng thẳng lối và dễ đọc hơn
+- package.json là gì?
+  - Tệp package.json là phần cốt lõi của hệ sinh thái Node.js và là phần cơ bản nhất để hiểu và làm việc với Node.js, npm và cả JavaScript. Nó được sử dụng như một bản kê khai thông tin ứng dụng, các modules, thư viện và nhiều thứ khác được sử dụng trong ứng dụng của chúng ta.
+- dependencies vs devDependencies?
+  - dependencies : Chứa các thư viện cần thiết để ứng dụng chạy thực tế (production).
+  - devDependencies : Thư viện chỉ dùng khi phát triển, không cần khi deploy.
+  - cánh dùng :
+    - Nếu thư viện cần thiết khi ứng dụng chạy thực tế, đặt trong dependencies.
+    - Nếu thư viện chỉ hỗ trợ trong quá trình phát triển, đặt trong devDependencies.
+- Sự khác biệt giữa git merge và git rebase?
+  - git merge dùng để gộp một nhánh khác vào nhánh hiện tại mà không thay đổi lịch sử commit.
+  - git rebase di chuyển toàn bộ commit của một nhánh đến cuối nhánh hiện tại
+  - cánh dùng :
+    - git merge Khi làm việc nhóm, muốn giữ nguyên lịch sử commit.
+    - git rebase Khi làm việc cá nhân, muốn lịch sử commit sạch.
+- Sự khác nhau giữa git reset, git checkout và git revert?
+  - git reset xóa hoặc di chuyển commit về trạng thái trước đó
+  - git checkout chuyển nhánh hoặc quay về trạng thái commit cũ
+  - git revert tạo commit mới để đảo ngược commit cũ
