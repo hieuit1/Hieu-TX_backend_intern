@@ -1,98 +1,130 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+Day 2
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+- Primitive Types?
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+  - Có 6 kiểu dữ liệu nguyên thủy (primitive data type): undefined, boolean, number, string, bigint, symbol.
 
-## Description
+- Object types?
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+  - Trong TypeScript, Object là một kiểu dữ liệu được sử dụng để biểu diễn các tập hợp giá trị có cấu trúc, bao gồm nhiều thuộc tính và phương thức.
+  - VD : let obj: object = { name: "Alice", age: 25 };
 
-## Project setup
+- Union Types?
 
-```bash
-$ npm install
-```
+  - Union Type cho phép một biến có thể chứa một trong nhiều kiểu dữ liệu. Điều này giúp tăng tính linh hoạt và khả năng tái sử dụng code, đặc biệt khi làm việc với các hàm hoặc biến có thể nhận nhiều kiểu giá trị khác nhau.
+  - Union : được khai báo bằng cách sử dụng ký hiệu |
+  - VD : let value: number | string;
+    value = 42; // Hợp lệ
+    value = "Hello"; // Cũng hợp lệ
 
-## Compile and run the project
+- Intersection Types?
 
-```bash
-# development
-$ npm run start
+  - Intersection Type trong TypeScript cho phép bạn kết hợp nhiều kiểu khác nhau thành một kiểu duy nhất. Điều này có nghĩa là một biến có kiểu giao sẽ phải thỏa mãn tất cả các kiểu mà nó kết hợp
+  - Cú pháp của Intersection Type được biểu diễn bằng ký hiệu &
+  - VD : interface Wizard {
+    magicPower: string;
+    wand: string;
+    }
 
-# watch mode
-$ npm run start:dev
+    interface Chef {
+    favoriteDish: string;
+    kitchenTool: string;
+    }
 
-# production mode
-$ npm run start:prod
-```
+    type WizardChef = Wizard & Chef;
 
-## Run tests
+- Interface vs Type Alias?
+  - Interface cho phép bạn định nghĩa form của Object. Interface chủ yếu được sử dụng để khai báo các loại đối tượng và thường được dùng trong lập trình hướng đối tượng. Interface có thể extend (kế thừa, mở rộng) và merge (hợp nhất lại), điều này giúp cho việc mở rộng Model trở nên dễ dàng, linh hoạt và dễ tái sử dụng hơn.
 
-```bash
-# unit tests
-$ npm run test
+* VD : interface User {
+  name: string;
+  age: number;
+  email?: string; // Thuộc tính tùy chọn
+  }
 
-# e2e tests
-$ npm run test:e2e
+       const user: User = {
+      	 name: "John",
+      	 age: 30
+      };
 
-# test coverage
-$ npm run test:cov
-```
+  Type Alias
 
-## Deployment
+  - Type Alias cho phép bạn tạo một tên gọi mới cho bất kỳ kiểu dữ liệu nào, không chỉ giới hạn ở các đối tượng. Type Alias có thể sử dụng với các primitive type (kiểu nguyên thủy), union type, intersection, tuple, ...
+  - VD : type User = {
+    name: string;
+    age: number;
+    email?: string;
+    };
+    const user: User = {
+    name: "John",
+    age: 30
+    };
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+    type ID = number | string; // Union Type
+    let userId: ID = 123;
+    userId = "abc123";
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- Generics là gì?
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+  - Generics là một tính năng trong TypeScript và các ngôn ngữ lập trình khác, cho phép chúng ta viết một function, class hay interface chung cho nhiều loại dữ liệu khác nhau, và chỉ xác định loại dữ liệu cụ thể khi sử dụng loại dữ liệu đó.
+  - Cú pháp Generics : <T>
+  - VD : function identity<T>(arg: T): T {
+    return arg;
+    }
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+  const output1 = identity<string>("myString"); // type of output will be 'string'
+  console.log(output1);
 
-## Resources
+  const output2 = identity<number>(123); // type of output will be 'number'
+  console.log(output2);
 
-Check out a few resources that may come in handy when working with NestJS:
+- Decorators là gì?
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+  - Decorator trong TypeScript, một tính năng mạnh mẽ giúp mở rộng và thay đổi hành vi của các class, method, property và parameter. Decorator giúp làm cho code trở nên dễ đọc và dễ bảo trì hơn.
+  - Decorator: được khai báo bằng cách sử dụng ký hiệu @
+  - vd : @Controller('cats')
+    export class CatsController {
+    @Get()
+    findAll(): string {
+    return 'This action returns all cats';
+    }
+    }
 
-## Support
+- Optional & Readonly Properties?
+  - Optional trong TypeScript có vai trò chính là làm cho một thuộc tính hoặc tham số có thể có hoặc không mà không bắt buộc phải khai báo.
+- Optional: được khai báo bằng cách sử dụng ký hiệu ?
+- VD: interface User {
+  id: number;
+  name: string;
+  age?: number; // Không bắt buộc phải có
+  }
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+  const user1: User = { id: 1, name: "Alice" }; // Hợp lệ
+  const user2: User = { id: 2, name: "Bob", age: 25 }; // Hợp lệ
 
-## Stay in touch
+- Readonly properties : readonly là một từ khóa giúp chỉ cho phép đọc giá trị của một thuộc tính, không cho phép thay đổi sau khi được khởi tạo.
+- Readonly properties : được khai báo bằng cách sử dụng readonly
+- VD: interface User {
+  readonly id: number; // Không thể thay đổi sau khi khởi tạo
+  name: string;
+  }
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+  const user: User = { id: 1, name: "Alice" };
 
-## License
+- dùng cho : Thuộc tính của object, class, interface
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Enum & Tuples?
+  - Enum (viết tắt của enumeration) là một kiểu dữ liệu đặc biệt trong TypeScript cho phép bạn định nghĩa một tập hợp các hằng số có tên, giúp mã dễ đọc và dễ quản lý hơn.Mặc định, Enum trong TypeScript là số, bắt đầu từ 0 và tăng dần.
+- Enum : được khai báo bằng cách sử dụng enum
+- VD : enum Status {
+  Pending, // 0
+  InProgress, // 1
+  Completed // 2
+  }
+
+  let taskStatus: Status = Status.InProgress;
+  console.log(taskStatus); // Output: 1
+
+- Tuple trong TypeScript là một dạng array đặc biệt giúp bạn định nghĩa số lượng và kiểu dữ liệu cụ thể của từng phần tử.
+- VD : let user: [number, string] = [1, "Alice"];
+  console.log(user); // Output: [1, "Alice"]
