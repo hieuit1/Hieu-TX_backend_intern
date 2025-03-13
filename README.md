@@ -1,130 +1,69 @@
-Day 2
+Day 3
 
-- Primitive Types?
+- Module trong NestJS là gì? Tại sao nó quan trọng?
 
-  - Có 6 kiểu dữ liệu nguyên thủy (primitive data type): undefined, boolean, number, string, bigint, symbol.
+  - Module là một phần quan trọng giúp tổ chức mã nguồn một cách có cấu trúc và dễ quản lý. Mỗi module trong NestJS là một lớp TypeScript được đánh dấu bằng @Module() decorator, có nhiệm vụ nhóm các thành phần liên quan lại với nhau, chẳng hạn như Controllers, Services, Providers, và Imports.
+  - vì sao nó quan trọng Tổ chức mã nguồn rõ ràng Giúp dễ bảo trì, mở rộng, Tăng khả năng tái sử dụng Có thể tách thành module dùng chung, Quản lý Dependency Injection (DI) Module giúp quản lý Service, Provider hiệu quả.
 
-- Object types?
+- Sự khác biệt giữa @Module(), @Global(), và @Injectable()?
 
-  - Trong TypeScript, Object là một kiểu dữ liệu được sử dụng để biểu diễn các tập hợp giá trị có cấu trúc, bao gồm nhiều thuộc tính và phương thức.
-  - VD : let obj: object = { name: "Alice", age: 25 };
+  - @Module() Định nghĩa một module, Gom nhóm Controller, Service, Middleware,... vào một module
+  - @Global() Biến module thành toàn cục, Cho phép module được dùng ở bất kỳ đâu mà không cần import
+  - @Injectable() Định nghĩa một Service có thể inject, Quản lý Service thông qua Dependency Injection
 
-- Union Types?
+- Làm thế nào để import và export các providers giữa các module?
 
-  - Union Type cho phép một biến có thể chứa một trong nhiều kiểu dữ liệu. Điều này giúp tăng tính linh hoạt và khả năng tái sử dụng code, đặc biệt khi làm việc với các hàm hoặc biến có thể nhận nhiều kiểu giá trị khác nhau.
-  - Union : được khai báo bằng cách sử dụng ký hiệu |
-  - VD : let value: number | string;
-    value = 42; // Hợp lệ
-    value = "Hello"; // Cũng hợp lệ
+  - Để sử dụng các providers đã được export từ một module khác, bạn cần import module đó vào module hiện tại. Việc import module được thực hiện trong decorator @Module() bằng cách sử dụng mảng imports
+  - Để một module chia sẻ providers của nó với các module khác, bạn cần export các providers đó. Việc export được thực hiện trong decorator @Module() bằng cách sử dụng mảng exports.
 
-- Intersection Types?
+- Controller trong NestJS đóng vai trò gì?
 
-  - Intersection Type trong TypeScript cho phép bạn kết hợp nhiều kiểu khác nhau thành một kiểu duy nhất. Điều này có nghĩa là một biến có kiểu giao sẽ phải thỏa mãn tất cả các kiểu mà nó kết hợp
-  - Cú pháp của Intersection Type được biểu diễn bằng ký hiệu &
-  - VD : interface Wizard {
-    magicPower: string;
-    wand: string;
-    }
+  - Trong NestJS, Controller là nơi định nghĩa các endpoint (tuyến API) và xử lý các request từ client.
+    Mỗi controller là một lớp TypeScript và được đánh dấu bằng @Controller() decorator.
 
-    interface Chef {
-    favoriteDish: string;
-    kitchenTool: string;
-    }
+- Cách sử dụng các decorator như @Get(), @Post(), @Param(), và @Body()?
 
-    type WizardChef = Wizard & Chef;
+  - @Get(): Dùng để định nghĩa một route GET. Thường được sử dụng để lấy dữ liệu từ server.
+  - @Post(): Dùng để định nghĩa một route POST. Thường được sử dụng để gửi dữ liệu lên server.
+  - @Param(): Dùng để lấy dữ liệu từ URL params. Ví dụ: /users/:id
+  - @Body():Dùng để lấy dữ liệu từ phần body của request (thường trong các API POST, PUT).
 
-- Interface vs Type Alias?
-  - Interface cho phép bạn định nghĩa form của Object. Interface chủ yếu được sử dụng để khai báo các loại đối tượng và thường được dùng trong lập trình hướng đối tượng. Interface có thể extend (kế thừa, mở rộng) và merge (hợp nhất lại), điều này giúp cho việc mở rộng Model trở nên dễ dàng, linh hoạt và dễ tái sử dụng hơn.
+- Provider trong NestJS là gì? Có những loại provider nào?
 
-* VD : interface User {
-  name: string;
-  age: number;
-  email?: string; // Thuộc tính tùy chọn
-  }
+  - Trong NestJS, Providers là nơi xử lý logic nghiệp vụ và có thể được inject vào các phần khác của ứng dụng (Controllers, Services, Guards, Interceptors, Pipes...).
+  - Các loại Provider trong NestJS :
+    - Class Provider : Định nghĩa một class thông thường (thường là Service hoặc Repository).
+    - Value Provider : Cung cấp một giá trị tĩnh (ví dụ: API key, config).
+    - Factory Provider : Cung cấp logic xử lý hoặc tạo ra một instance thông qua function.
+    - Alias Provider : Tạo bí danh cho Provider đã tồn tại.
 
-       const user: User = {
-      	 name: "John",
-      	 age: 30
-      };
+- Sự khác biệt giữa @Injectable() và @Inject()?
 
-  Type Alias
+  - @Injectable()
+    - Vai trò : Đánh dấu class là một Provider
+    - Cách hoạt động : Tự động quản lý dependency (DI)
+    - Áp dụng cho : Class (Service, Repository, Middleware)
+  - @Inject()
+    - Vai trò : Inject một Provider hoặc một giá trị cụ thể
+    - Cách hoạt động : Cần chỉ định thủ công qua token
+    - Áp dụng cho : Giá trị tĩnh, Class hoặc Factory
 
-  - Type Alias cho phép bạn tạo một tên gọi mới cho bất kỳ kiểu dữ liệu nào, không chỉ giới hạn ở các đối tượng. Type Alias có thể sử dụng với các primitive type (kiểu nguyên thủy), union type, intersection, tuple, ...
-  - VD : type User = {
-    name: string;
-    age: number;
-    email?: string;
-    };
-    const user: User = {
-    name: "John",
-    age: 30
-    };
+- Middleware là gì?
 
-    type ID = number | string; // Union Type
-    let userId: ID = 123;
-    userId = "abc123";
+  - Middleware trong NestJS là một hàm trung gian chạy trước khi request đến Controller. Nó thường được dùng để Kiểm tra & xác thực request (Authentication, Authorization), Ghi log request (Logging). Xử lý dữ liệu đầu vào (Parsing, Validation). Thêm headers vào response (CORS, Security).
 
-- Generics là gì?
+- Làm thế nào để tạo một custom middleware trong NestJS?
 
-  - Generics là một tính năng trong TypeScript và các ngôn ngữ lập trình khác, cho phép chúng ta viết một function, class hay interface chung cho nhiều loại dữ liệu khác nhau, và chỉ xác định loại dữ liệu cụ thể khi sử dụng loại dữ liệu đó.
-  - Cú pháp Generics : <T>
-  - VD : function identity<T>(arg: T): T {
-    return arg;
-    }
+  - Có hai cách chính để tạo custom middleware trong NestJS:
 
-  const output1 = identity<string>("myString"); // type of output will be 'string'
-  console.log(output1);
+  - Class-based Middleware (Sử dụng Class): Đây là cách phổ biến và được khuyến khích vì nó tận dụng được Dependency Injection (DI) của NestJS.
+  - Functional Middleware (Sử dụng Function): Đơn giản hơn cho các middleware không cần DI hoặc logic phức tạp.
 
-  const output2 = identity<number>(123); // type of output will be 'number'
-  console.log(output2);
+- NestJS cung cấp những built-in middleware nào?
 
-- Decorators là gì?
+  - Built-in Middleware NestJS hỗ trợ sử dụng Middleware có sẵn của Express hoặc Fastify express.json() : Xử lý request body ở dạng JSON, express.urlencoded() : Xử lý form-data (x-www-form-urlencoded), cors() : Kích hoạt CORS (Cross-Origin Resource Sharing), helmet() : Bảo vệ ứng dụng khỏi các lỗ hổng bảo mật, compression() : Nén response để tăng hiệu suất.
 
-  - Decorator trong TypeScript, một tính năng mạnh mẽ giúp mở rộng và thay đổi hành vi của các class, method, property và parameter. Decorator giúp làm cho code trở nên dễ đọc và dễ bảo trì hơn.
-  - Decorator: được khai báo bằng cách sử dụng ký hiệu @
-  - vd : @Controller('cats')
-    export class CatsController {
-    @Get()
-    findAll(): string {
-    return 'This action returns all cats';
-    }
-    }
+- Cách sử dụng middleware trong NestJS?
 
-- Optional & Readonly Properties?
-  - Optional trong TypeScript có vai trò chính là làm cho một thuộc tính hoặc tham số có thể có hoặc không mà không bắt buộc phải khai báo.
-- Optional: được khai báo bằng cách sử dụng ký hiệu ?
-- VD: interface User {
-  id: number;
-  name: string;
-  age?: number; // Không bắt buộc phải có
-  }
-
-  const user1: User = { id: 1, name: "Alice" }; // Hợp lệ
-  const user2: User = { id: 2, name: "Bob", age: 25 }; // Hợp lệ
-
-- Readonly properties : readonly là một từ khóa giúp chỉ cho phép đọc giá trị của một thuộc tính, không cho phép thay đổi sau khi được khởi tạo.
-- Readonly properties : được khai báo bằng cách sử dụng readonly
-- VD: interface User {
-  readonly id: number; // Không thể thay đổi sau khi khởi tạo
-  name: string;
-  }
-
-  const user: User = { id: 1, name: "Alice" };
-
-- dùng cho : Thuộc tính của object, class, interface
-
-- Enum & Tuples?
-  - Enum (viết tắt của enumeration) là một kiểu dữ liệu đặc biệt trong TypeScript cho phép bạn định nghĩa một tập hợp các hằng số có tên, giúp mã dễ đọc và dễ quản lý hơn.Mặc định, Enum trong TypeScript là số, bắt đầu từ 0 và tăng dần.
-- Enum : được khai báo bằng cách sử dụng enum
-- VD : enum Status {
-  Pending, // 0
-  InProgress, // 1
-  Completed // 2
-  }
-
-  let taskStatus: Status = Status.InProgress;
-  console.log(taskStatus); // Output: 1
-
-- Tuple trong TypeScript là một dạng array đặc biệt giúp bạn định nghĩa số lượng và kiểu dữ liệu cụ thể của từng phần tử.
-- VD : let user: [number, string] = [1, "Alice"];
-  console.log(user); // Output: [1, "Alice"]
+- Dependency Injection (DI) là gì?
+  - Dependency Injection (DI) là một kỹ thuật thiết kế phần mềm giúp quản lý sự phụ thuộc giữa các class bằng cách inject (tiêm) chúng thay vì khởi tạo trực tiếp , Tách biệt logic của class và sự phụ thuộc, Dễ dàng thay đổi & kiểm thử (Unit Test), NestJS tự động quản lý & inject dependencies bằng @Injectable() và @Inject().
