@@ -1,69 +1,111 @@
-Day 3
+Day 44
 
-- Module trong NestJS là gì? Tại sao nó quan trọng?
+- Database là gì?
 
-  - Module là một phần quan trọng giúp tổ chức mã nguồn một cách có cấu trúc và dễ quản lý. Mỗi module trong NestJS là một lớp TypeScript được đánh dấu bằng @Module() decorator, có nhiệm vụ nhóm các thành phần liên quan lại với nhau, chẳng hạn như Controllers, Services, Providers, và Imports.
-  - vì sao nó quan trọng Tổ chức mã nguồn rõ ràng Giúp dễ bảo trì, mở rộng, Tăng khả năng tái sử dụng Có thể tách thành module dùng chung, Quản lý Dependency Injection (DI) Module giúp quản lý Service, Provider hiệu quả.
+  - Là cấp cao nhất trong cấu trúc của MongoDB, Mỗi Database tương đương với một cơ sở dữ liệu riêng biệt, giống như một dự án lớn, Một MongoDB instance có thể chứa nhiều Database, Mỗi Database có không gian lưu trữ và các quyền truy cập riêng.
 
-- Sự khác biệt giữa @Module(), @Global(), và @Injectable()?
+- Collection là gì?
 
-  - @Module() Định nghĩa một module, Gom nhóm Controller, Service, Middleware,... vào một module
-  - @Global() Biến module thành toàn cục, Cho phép module được dùng ở bất kỳ đâu mà không cần import
-  - @Injectable() Định nghĩa một Service có thể inject, Quản lý Service thông qua Dependency Injection
+  - Là một tập hợp các Document (tài liệu), tương tự như một Table trong hệ quản trị cơ sở dữ liệu quan hệ (SQL), một Database có thể chứa nhiều Collection, các Document trong cùng một Collection không bắt buộc phải có cùng cấu trúc (schema-less).
 
-- Làm thế nào để import và export các providers giữa các module?
+- Document là gì?
 
-  - Để sử dụng các providers đã được export từ một module khác, bạn cần import module đó vào module hiện tại. Việc import module được thực hiện trong decorator @Module() bằng cách sử dụng mảng imports
-  - Để một module chia sẻ providers của nó với các module khác, bạn cần export các providers đó. Việc export được thực hiện trong decorator @Module() bằng cách sử dụng mảng exports.
+* Là đơn vị lưu trữ dữ liệu cơ bản trong MongoDB, được lưu dưới dạng JSON-like (BSON - Binary JSON), mỗi Document là một đối tượng chứa các cặp key-value (tương tự như một bản ghi trong SQL), mỗi Document có một trường id là duy nhất (ID tự động được MongoDB sinh ra).
 
-- Controller trong NestJS đóng vai trò gì?
+- Schema là gì?
+- Schema trong Mongoose
+- Schema là nơi định nghĩa cấu trúc của một Document trong MongoDB.
+- Nó giống như một "bản thiết kế" quy định các field (thuộc tính), kiểu dữ liệu và các ràng buộc (validation).
+- VD : import { Schema } from 'mongoose';
 
-  - Trong NestJS, Controller là nơi định nghĩa các endpoint (tuyến API) và xử lý các request từ client.
-    Mỗi controller là một lớp TypeScript và được đánh dấu bằng @Controller() decorator.
+const UserSchema = new Schema({
+name: { type: String, required: true },
+email: { type: String, unique: true, required: true },
+age: { type: Number, min: 18 },
+createdAt: { type: Date, default: Date.now },
+});
 
-- Cách sử dụng các decorator như @Get(), @Post(), @Param(), và @Body()?
+- Model là gì?
+  - - Model trong Mongoose
 
-  - @Get(): Dùng để định nghĩa một route GET. Thường được sử dụng để lấy dữ liệu từ server.
-  - @Post(): Dùng để định nghĩa một route POST. Thường được sử dụng để gửi dữ liệu lên server.
-  - @Param(): Dùng để lấy dữ liệu từ URL params. Ví dụ: /users/:id
-  - @Body():Dùng để lấy dữ liệu từ phần body của request (thường trong các API POST, PUT).
+* Model là nơi để thao tác trực tiếp với Collection trong MongoDB.
+* Nó cho phép bạn thực hiện các tha Nó cho phép bạn thực hiện các thao tác CRUD như: Create, Read, Update, Delete
+* VD : import { model } from 'mongoose';
 
-- Provider trong NestJS là gì? Có những loại provider nào?
+// Tạo Model
+export const UserModel = model('User', UserSchema);
 
-  - Trong NestJS, Providers là nơi xử lý logic nghiệp vụ và có thể được inject vào các phần khác của ứng dụng (Controllers, Services, Guards, Interceptors, Pipes...).
-  - Các loại Provider trong NestJS :
-    - Class Provider : Định nghĩa một class thông thường (thường là Service hoặc Repository).
-    - Value Provider : Cung cấp một giá trị tĩnh (ví dụ: API key, config).
-    - Factory Provider : Cung cấp logic xử lý hoặc tạo ra một instance thông qua function.
-    - Alias Provider : Tạo bí danh cho Provider đã tồn tại.
+- Indexing là gì?
 
-- Sự khác biệt giữa @Injectable() và @Inject()?
+  - Indexing (Đánh chỉ mục) là một cơ chế tối ưu hoá trong MongoDB, giúp tăng tốc độ truy vấn dữ liệu thông qua việc tạo ra cấu trúc dữ liệu đặc biệt để MongoDB có thể tìm kiếm dữ liệu nhanh hơn thay vì quét toàn bộ collection.
 
-  - @Injectable()
-    - Vai trò : Đánh dấu class là một Provider
-    - Cách hoạt động : Tự động quản lý dependency (DI)
-    - Áp dụng cho : Class (Service, Repository, Middleware)
-  - @Inject()
-    - Vai trò : Inject một Provider hoặc một giá trị cụ thể
-    - Cách hoạt động : Cần chỉ định thủ công qua token
-    - Áp dụng cho : Giá trị tĩnh, Class hoặc Factory
+- Các loại index phổ biến?
 
-- Middleware là gì?
+  1.  Single Field Index (Chỉ mục trên một trường) , Mục đích: Tạo Index trên một trường để tăng tốc truy vấn.
+      Ví dụ: Đánh Index trên trường email.
+      VD : UserSchema.index({ email: 1 });
 
-  - Middleware trong NestJS là một hàm trung gian chạy trước khi request đến Controller. Nó thường được dùng để Kiểm tra & xác thực request (Authentication, Authorization), Ghi log request (Logging). Xử lý dữ liệu đầu vào (Parsing, Validation). Thêm headers vào response (CORS, Security).
+  1: Tăng dần (Ascending)
+  -1: Giảm dần (Descending)
 
-- Làm thế nào để tạo một custom middleware trong NestJS?
+  - 2. Compound Index (Đánh chỉ mục trên nhiều trường) Mục đích: Tối ưu truy vấn trên nhiều trường cùng lúc.
+       Ví dụ: Tạo Index trên name và age.
+       VD : UserSchema.index({ name: 1, age: -1 }); 3. Unique Index (Chỉ mục đảm bảo dữ liệu duy nhất) Mục đích: Ngăn chặn dữ liệu trùng lặp.
+       Ví dụ: Không cho phép hai người có cùng email.
+       VD : UserSchema.index({ email: 1 }, { unique: true }); 4. Text Index (Đánh chỉ mục để tìm kiếm toàn văn bản) Mục đích: Tìm kiếm các đoạn text lớn (tương tự Google Search).
+       Ví dụ: Tìm kiếm theo trường description.
+       VD : UserSchema.index({ description: 'text' }); 5. Geospatial Index (Đánh chỉ mục để tìm kiếm theo vị trí địa lý) Mục đích: Tìm kiếm các địa điểm gần nhau, ví dụ như Grab, Google Maps.
+       Ví dụ: Tìm kiếm các quán cà phê trong bán kính 5km.
+       VD : UserSchema.index({ location: '2dsphere' });
 
-  - Có hai cách chính để tạo custom middleware trong NestJS:
+- Performance Optimization?
+  Performance Optimization (Tối ưu hiệu suất) trong MongoDB là tập hợp các kỹ thuật và chiến lược để: Tăng tốc độ truy vấn dữ liệu, Giảm tải bộ nhớ RAM và CPU, Giải quyết tình trạng Full Collection Scan (quét toàn bộ dữ liệu), Tối ưu cho hệ thống khi dữ liệu lớn (big data), Tăng khả năng mở rộng và xử lý đồng thời (Concurrency)
+  o Indexing (Đánh chỉ mục) Giúp MongoDB tìm dữ liệu trong B-Tree Index thay vì quét toàn bộ collection.
+  VD : UserSchema.index({ email: 1 });
+  o Projection (Chỉ lấy dữ liệu cần thiết) :
+  VD : await this.userModel.find(); chưa Trả về toàn bộ dữ liệu (bao gồm cả các trường không cần thiết), Lãng phí băng thông và bộ nhớ RAM
+  VD : await this.userModel.find({}, { name: 1, email: 1, \_id: 0 }); hỉ lấy name và email, Giảm 60% kích thước dữ liệu
+  o Lean Query (Giảm tải bộ nhớ) Mongoose trả về Mongoose Document, chứa nhiều metadata không cần thiết. lean() giúp trả về Plain Object, giảm 50% bộ nhớ RAM.
+  VD : await this.userModel.find().lean();
+  o Pagination (Phân trang dữ liệu)
+  Giải pháp: Cursor-based Pagination (Phân trang dựa trên con trỏ)
+  Cách hoạt động:
+  • Lấy 10 bản ghi đầu tiên
+  Lấy \_id của bản ghi cuối cùng trong trang hiện tại
+  Lấy tiếp 10 bản ghi tiếp theo từ ID đó trở đi
+  o Caching với Redis (Giảm tải MongoDB)
+  Giải pháp: Cache dữ liệu trong Redis : Lưu dữ liệu trong bộ nhớ RAM ruy xuất siêu nhanh (~1ms) Giảm 80% áp lực cho MongoDB
+  o Connection Pooling (Tối ưu kết nối đồng thời tới MongoDB)
+  Vấn đề : Khi có 1000 request API đồng thời, MongoDB bị quá tải vì không đủ kết nối để xử lý.
+  Giải pháp : Tăng Connection Pool (Bể kết nối)
+  • Connection Pool là gì?: MongoDB cho phép nhiều kết nối đồng thời. Mặc định MongoDB chỉ cho phép 5 kết nối đồng thời. Tăng Connection Pool lên 20-50 kết nối giúp xử lý nhiều request cùng lúc.
+   VD: MongooseModule.forRoot('mongodb://localhost:27017/nestjs', { poolSize: 20, // Tăng số lượng kết nối đồng thời lên 20 useUnifiedTopology:
+  true, useNewUrlParser: true,
+  }
+  );
+   Sharding (Phân mảnh dữ liệu lớn trong MongoDB)
 
-  - Class-based Middleware (Sử dụng Class): Đây là cách phổ biến và được khuyến khích vì nó tận dụng được Dependency Injection (DI) của NestJS.
-  - Functional Middleware (Sử dụng Function): Đơn giản hơn cho các middleware không cần DI hoặc logic phức tạp.
+- Transaction là gì?
+  Transactions trong MongoDB cho phép:
+  o Thực hiện nhiều thao tác trong 1 phiên giao dịch (session)
+  o Nếu một thao tác thất bại, toàn bộ các thao tác khác sẽ rollback (hoàn tác).
+  o Giống như MySQL hay PostgreSQL, nhưng trong MongoDB!
 
-- NestJS cung cấp những built-in middleware nào?
-
-  - Built-in Middleware NestJS hỗ trợ sử dụng Middleware có sẵn của Express hoặc Fastify express.json() : Xử lý request body ở dạng JSON, express.urlencoded() : Xử lý form-data (x-www-form-urlencoded), cors() : Kích hoạt CORS (Cross-Origin Resource Sharing), helmet() : Bảo vệ ứng dụng khỏi các lỗ hổng bảo mật, compression() : Nén response để tăng hiệu suất.
-
-- Cách sử dụng middleware trong NestJS?
-
-- Dependency Injection (DI) là gì?
-  - Dependency Injection (DI) là một kỹ thuật thiết kế phần mềm giúp quản lý sự phụ thuộc giữa các class bằng cách inject (tiêm) chúng thay vì khởi tạo trực tiếp , Tách biệt logic của class và sự phụ thuộc, Dễ dàng thay đổi & kiểm thử (Unit Test), NestJS tự động quản lý & inject dependencies bằng @Injectable() và @Inject().
+- Cách sử dụng transactions trong Mongoose?
+  Cách sử dụng:
+  1️ Bắt đầu session và transaction
+  typescript
+  CopyEdit
+  const session = await this.connection.startSession();
+  session.startTransaction();
+  2️ Thực hiện các thao tác trong session
+  typescript
+  CopyEdit
+  await this.userModel.findByIdAndUpdate(userId, { $inc: { balance: -price } }, { session });
+  await new this.orderModel({ userId, product, price }).save({ session });
+  3️ Commit nếu thành công, rollback nếu lỗi
+  typescript
+  CopyEdit
+  await session.commitTransaction(); // Commit
+  await session.abortTransaction(); // Rollback
+  session.endSession(); // Kết thúc session

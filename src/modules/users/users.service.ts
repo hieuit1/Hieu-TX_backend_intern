@@ -7,7 +7,11 @@ import { User } from './users.schema';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async createUser( name: string, email: string, password: string): Promise<User> {
+  async createUser(
+    name: string,
+    email: string,
+    password: string,
+  ): Promise<User> {
     const newUser = new this.userModel({ name, email, password });
     return await newUser.save();
   }
@@ -31,7 +35,9 @@ export class UsersService {
 
   async updateUser(id: string, data: Partial<User>): Promise<User | null> {
     try {
-      const updatedUser = await this.userModel.findByIdAndUpdate(id, data, { new: true }).exec();
+      const updatedUser = await this.userModel
+        .findByIdAndUpdate(id, data, { new: true })
+        .exec();
       if (!updatedUser) {
         throw new Error(`User with id ${id} not found`);
       }
