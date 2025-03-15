@@ -3,17 +3,17 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class Curdmongodb extends Document {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string;
 
   @Prop({ required: true })
-  email: string;
+  description: string;
 
   @Prop({ required: true })
-  password: string;
+  price: number;
 
   @Prop({ required: true })
-  age: number;
+  date: string;
 }
 
 export const CurdmongodbSchema = SchemaFactory.createForClass(Curdmongodb);

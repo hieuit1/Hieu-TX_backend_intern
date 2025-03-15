@@ -19,16 +19,16 @@ export class CurdmongodbController {
     @Body()
     body: {
       name: string;
-      email: string;
-      password: string;
-      age: number;
+      description: string;
+      price: number;
+      date: string;
     },
   ) {
     return this.mongodbService.createALLCURDProduct(
       body.name,
-      body.email,
-      body.password,
-      body.age,
+      body.description,
+      body.price,
+      body.date,
     );
   }
 
@@ -57,9 +57,9 @@ export class CurdmongodbController {
     @Body()
     body: Partial<{
       name: string;
-      email: string;
-      password: string;
-      age: number;
+      description: string;
+      price: number;
+      date: string;
     }>,
   ) {
     return this.mongodbService.updateProductById(id, body); // Thêm body vào đây

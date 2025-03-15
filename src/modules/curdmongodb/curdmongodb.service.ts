@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Curdmongodb } from './curdmongodb.schema';
@@ -10,11 +10,15 @@ export class CurdmongodbService {
   ) {}
   async createALLCURDProduct(
     name: string,
-    email: string,
-    password: string,
-    age: number,
+    description: string,
+    price: number,
+    date: string,
   ): Promise<Curdmongodb> {
-    const newProduct = new this.userModel({ name, email, password, age });
+    const existingProduct = await this.userModel.findOne({ name });
+    if (existingProduct) {
+      throw new BadRequestException('Product already exists');
+    }
+    const newProduct = new this.userModel({ name, description, price, date });
     return await newProduct.save();
   }
 
@@ -31,7 +35,7 @@ export class CurdmongodbService {
       filter = {
         $or: [
           { name: new RegExp(search, 'i') },
-          { email: new RegExp(search, 'i') },
+          { description: new RegExp(search, 'i') },
         ],
       };
     }
