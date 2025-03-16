@@ -1,7 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Curdmongodb } from './curdmongodb.schema';
+import { UpdateProductDto } from './dto/updateProduct.dto';
 
 @Injectable()
 export class CurdmongodbService {
@@ -69,20 +74,22 @@ export class CurdmongodbService {
 
   async updateProductById(
     id: string,
-    data: Partial<Curdmongodb>,
+    updateProductDto: UpdateProductDto,
   ): Promise<Curdmongodb | null> {
-    try {
-      const updatedUser = await this.userModel
-        .findByIdAndUpdate(id, data, { new: true })
-        .exec();
-      if (!updatedUser) {
-        throw new Error(`User with id ${id} not found`);
-      }
-      return updatedUser;
-    } catch (error) {
-      console.error('Error updating user:', error);
-      throw new Error('Database error');
+    const updatedProduct = await this.userModel.findByIdAndUpdate(
+      id,
+      updateProductDto,
+      {
+        new: true, // Trả về dữ liệu mới sau khi update
+        runValidators: true, // Validate dữ liệu trước khi update
+      },
+    );
+
+    if (!updatedProduct) {
+      throw new NotFoundException(`Product with id ${id} not found`);
     }
+
+    return updatedProduct;
   }
 
   async deleteProductById(id: string): Promise<string> {

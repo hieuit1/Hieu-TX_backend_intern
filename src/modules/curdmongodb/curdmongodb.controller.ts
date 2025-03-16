@@ -9,26 +9,20 @@ import {
   Query,
 } from '@nestjs/common';
 import { CurdmongodbService } from './curdmongodb.service';
+import { CreateProductDto } from './dto/createProduct.dto';
+import { UpdateProductDto } from './dto/updateProduct.dto';
 
 @Controller('products')
 export class CurdmongodbController {
   constructor(private readonly mongodbService: CurdmongodbService) {}
 
   @Post()
-  createALLCURDProduct(
-    @Body()
-    body: {
-      name: string;
-      description: string;
-      price: number;
-      date: string;
-    },
-  ) {
+  createALLCURDProduct(@Body() createProductDto: CreateProductDto) {
     return this.mongodbService.createALLCURDProduct(
-      body.name,
-      body.description,
-      body.price,
-      body.date,
+      createProductDto.name,
+      createProductDto.description,
+      createProductDto.price,
+      createProductDto.date,
     );
   }
 
@@ -54,15 +48,9 @@ export class CurdmongodbController {
   @Put(':id')
   updateProductById(
     @Param('id') id: string,
-    @Body()
-    body: Partial<{
-      name: string;
-      description: string;
-      price: number;
-      date: string;
-    }>,
+    @Body() updateProductById: UpdateProductDto,
   ) {
-    return this.mongodbService.updateProductById(id, body); // Thêm body vào đây
+    return this.mongodbService.updateProductById(id, updateProductById); // Thêm body vào đây
   }
 
   @Delete(':id')
