@@ -1,98 +1,111 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+Day 44
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+- Database là gì?
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+  - Là cấp cao nhất trong cấu trúc của MongoDB, Mỗi Database tương đương với một cơ sở dữ liệu riêng biệt, giống như một dự án lớn, Một MongoDB instance có thể chứa nhiều Database, Mỗi Database có không gian lưu trữ và các quyền truy cập riêng.
 
-## Description
+- Collection là gì?
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+  - Là một tập hợp các Document (tài liệu), tương tự như một Table trong hệ quản trị cơ sở dữ liệu quan hệ (SQL), một Database có thể chứa nhiều Collection, các Document trong cùng một Collection không bắt buộc phải có cùng cấu trúc (schema-less).
 
-## Project setup
+- Document là gì?
 
-```bash
-$ npm install
-```
+* Là đơn vị lưu trữ dữ liệu cơ bản trong MongoDB, được lưu dưới dạng JSON-like (BSON - Binary JSON), mỗi Document là một đối tượng chứa các cặp key-value (tương tự như một bản ghi trong SQL), mỗi Document có một trường id là duy nhất (ID tự động được MongoDB sinh ra).
 
-## Compile and run the project
+- Schema là gì?
+- Schema trong Mongoose
+- Schema là nơi định nghĩa cấu trúc của một Document trong MongoDB.
+- Nó giống như một "bản thiết kế" quy định các field (thuộc tính), kiểu dữ liệu và các ràng buộc (validation).
+- VD : import { Schema } from 'mongoose';
 
-```bash
-# development
-$ npm run start
+const UserSchema = new Schema({
+name: { type: String, required: true },
+email: { type: String, unique: true, required: true },
+age: { type: Number, min: 18 },
+createdAt: { type: Date, default: Date.now },
+});
 
-# watch mode
-$ npm run start:dev
+- Model là gì?
+  - - Model trong Mongoose
 
-# production mode
-$ npm run start:prod
-```
+* Model là nơi để thao tác trực tiếp với Collection trong MongoDB.
+* Nó cho phép bạn thực hiện các tha Nó cho phép bạn thực hiện các thao tác CRUD như: Create, Read, Update, Delete
+* VD : import { model } from 'mongoose';
 
-## Run tests
+// Tạo Model
+export const UserModel = model('User', UserSchema);
 
-```bash
-# unit tests
-$ npm run test
+- Indexing là gì?
 
-# e2e tests
-$ npm run test:e2e
+  - Indexing (Đánh chỉ mục) là một cơ chế tối ưu hoá trong MongoDB, giúp tăng tốc độ truy vấn dữ liệu thông qua việc tạo ra cấu trúc dữ liệu đặc biệt để MongoDB có thể tìm kiếm dữ liệu nhanh hơn thay vì quét toàn bộ collection.
 
-# test coverage
-$ npm run test:cov
-```
+- Các loại index phổ biến?
 
-## Deployment
+  1.  Single Field Index (Chỉ mục trên một trường) , Mục đích: Tạo Index trên một trường để tăng tốc truy vấn.
+      Ví dụ: Đánh Index trên trường email.
+      VD : UserSchema.index({ email: 1 });
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+  1: Tăng dần (Ascending)
+  -1: Giảm dần (Descending)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+  - 2. Compound Index (Đánh chỉ mục trên nhiều trường) Mục đích: Tối ưu truy vấn trên nhiều trường cùng lúc.
+       Ví dụ: Tạo Index trên name và age.
+       VD : UserSchema.index({ name: 1, age: -1 }); 3. Unique Index (Chỉ mục đảm bảo dữ liệu duy nhất) Mục đích: Ngăn chặn dữ liệu trùng lặp.
+       Ví dụ: Không cho phép hai người có cùng email.
+       VD : UserSchema.index({ email: 1 }, { unique: true }); 4. Text Index (Đánh chỉ mục để tìm kiếm toàn văn bản) Mục đích: Tìm kiếm các đoạn text lớn (tương tự Google Search).
+       Ví dụ: Tìm kiếm theo trường description.
+       VD : UserSchema.index({ description: 'text' }); 5. Geospatial Index (Đánh chỉ mục để tìm kiếm theo vị trí địa lý) Mục đích: Tìm kiếm các địa điểm gần nhau, ví dụ như Grab, Google Maps.
+       Ví dụ: Tìm kiếm các quán cà phê trong bán kính 5km.
+       VD : UserSchema.index({ location: '2dsphere' });
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+- Performance Optimization?
+  Performance Optimization (Tối ưu hiệu suất) trong MongoDB là tập hợp các kỹ thuật và chiến lược để: Tăng tốc độ truy vấn dữ liệu, Giảm tải bộ nhớ RAM và CPU, Giải quyết tình trạng Full Collection Scan (quét toàn bộ dữ liệu), Tối ưu cho hệ thống khi dữ liệu lớn (big data), Tăng khả năng mở rộng và xử lý đồng thời (Concurrency)
+  o Indexing (Đánh chỉ mục) Giúp MongoDB tìm dữ liệu trong B-Tree Index thay vì quét toàn bộ collection.
+  VD : UserSchema.index({ email: 1 });
+  o Projection (Chỉ lấy dữ liệu cần thiết) :
+  VD : await this.userModel.find(); chưa Trả về toàn bộ dữ liệu (bao gồm cả các trường không cần thiết), Lãng phí băng thông và bộ nhớ RAM
+  VD : await this.userModel.find({}, { name: 1, email: 1, \_id: 0 }); hỉ lấy name và email, Giảm 60% kích thước dữ liệu
+  o Lean Query (Giảm tải bộ nhớ) Mongoose trả về Mongoose Document, chứa nhiều metadata không cần thiết. lean() giúp trả về Plain Object, giảm 50% bộ nhớ RAM.
+  VD : await this.userModel.find().lean();
+  o Pagination (Phân trang dữ liệu)
+  Giải pháp: Cursor-based Pagination (Phân trang dựa trên con trỏ)
+  Cách hoạt động:
+  • Lấy 10 bản ghi đầu tiên
+  Lấy \_id của bản ghi cuối cùng trong trang hiện tại
+  Lấy tiếp 10 bản ghi tiếp theo từ ID đó trở đi
+  o Caching với Redis (Giảm tải MongoDB)
+  Giải pháp: Cache dữ liệu trong Redis : Lưu dữ liệu trong bộ nhớ RAM ruy xuất siêu nhanh (~1ms) Giảm 80% áp lực cho MongoDB
+  o Connection Pooling (Tối ưu kết nối đồng thời tới MongoDB)
+  Vấn đề : Khi có 1000 request API đồng thời, MongoDB bị quá tải vì không đủ kết nối để xử lý.
+  Giải pháp : Tăng Connection Pool (Bể kết nối)
+  • Connection Pool là gì?: MongoDB cho phép nhiều kết nối đồng thời. Mặc định MongoDB chỉ cho phép 5 kết nối đồng thời. Tăng Connection Pool lên 20-50 kết nối giúp xử lý nhiều request cùng lúc.
+   VD: MongooseModule.forRoot('mongodb://localhost:27017/nestjs', { poolSize: 20, // Tăng số lượng kết nối đồng thời lên 20 useUnifiedTopology:
+  true, useNewUrlParser: true,
+  }
+  );
+   Sharding (Phân mảnh dữ liệu lớn trong MongoDB)
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+- Transaction là gì?
+  Transactions trong MongoDB cho phép:
+  o Thực hiện nhiều thao tác trong 1 phiên giao dịch (session)
+  o Nếu một thao tác thất bại, toàn bộ các thao tác khác sẽ rollback (hoàn tác).
+  o Giống như MySQL hay PostgreSQL, nhưng trong MongoDB!
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Cách sử dụng transactions trong Mongoose?
+  Cách sử dụng:
+  1️ Bắt đầu session và transaction
+  typescript
+  CopyEdit
+  const session = await this.connection.startSession();
+  session.startTransaction();
+  2️ Thực hiện các thao tác trong session
+  typescript
+  CopyEdit
+  await this.userModel.findByIdAndUpdate(userId, { $inc: { balance: -price } }, { session });
+  await new this.orderModel({ userId, product, price }).save({ session });
+  3️ Commit nếu thành công, rollback nếu lỗi
+  typescript
+  CopyEdit
+  await session.commitTransaction(); // Commit
+  await session.abortTransaction(); // Rollback
+  session.endSession(); // Kết thúc session
