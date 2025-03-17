@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './modules/users/users.module';
 import { CurdmongodbModule } from './modules/curdmongodb/curdmongodb.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CurdmongodbModule } from './modules/curdmongodb/curdmongodb.module';
     }),
     UsersModule,
     CurdmongodbModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
