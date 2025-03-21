@@ -21,7 +21,7 @@ export class Product {
   @Prop({ type: [String], default: [] })
   images: string[];
 
-  @Prop({default : true})
+  @Prop({type :Boolean, default : true})
   isActive: boolean;
 }
 

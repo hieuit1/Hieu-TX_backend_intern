@@ -24,7 +24,7 @@ export class Shop {
   @Prop({type : String , required: true})
   phone : string
 
-  @Prop({default : true})
+  @Prop({ type : Boolean, default : true})
   isActive: boolean;
 }
 

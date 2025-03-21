@@ -1,16 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { AttributeDto } from './attribute.dto';
 
-class AttributeDto{
-  @IsNotEmpty()
-  @IsString()
-  name : string;
-  
-  @IsNotEmpty()
-  @IsString()
-  value : string;
-
-}
 
 export default class CreateSkuDto {
   @IsNotEmpty()
