@@ -112,6 +112,23 @@ export default class ProductController {
   @Get('paginate')
   @HttpCode(200)
   async paginate(@ApiQueryParams() query: AqpDto): Promise<any> {
+
+    //search product
+    const search = query.filter?.search?.trim(); 
+    if (search) {
+      delete query.filter.search;
+      if (search) {
+        query.filter = {
+            ...query.filter,
+            $text: { $search: search, $diacriticSensitive: true, $language: "english"}, // Full-text search
+        };
+        query.projection = {
+            ...query.projection,
+            score: { $meta: 'textScore' }, 
+        };
+    }
+    }
+  
     return this.productService.paginate(query);
   }
 

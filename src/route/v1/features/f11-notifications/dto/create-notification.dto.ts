@@ -9,13 +9,13 @@ export default class CreateNotificationDto {
   @IsMongoId()
   recipientId: string;
 
-  @IsNotEmpty()
+  @IsOptional() 
   @IsString()
-  notificationType: string;
+  notificationType?: string;
 
-  @IsNotEmpty()
+  @IsOptional() 
   @IsString()
-  entityName: string;
+  entityName?: string; 
 
   @IsNotEmpty()
   @IsMongoId()

@@ -27,3 +27,5 @@ export class Product {
 
 export type ProductDocument = Product & Document;
 export const ProductSchema = SchemaFactory.createForClass(Product);
+//Thêm text index vào schema để hỗ trợ tìm kiếm
+ProductSchema.index({ name: 'text', description: 'text' });
