@@ -1,9 +1,9 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import mongoose from 'mongoose';
+import {  IsMongoId, IsNotEmpty,  IsString } from 'class-validator';
 
 export default class CreateCategoryDto {
+  @IsMongoId()
   @IsNotEmpty()
-  parentId: mongoose.Schema.Types.ObjectId;
+  parentId: string;
 
   @IsNotEmpty()
   @IsString()

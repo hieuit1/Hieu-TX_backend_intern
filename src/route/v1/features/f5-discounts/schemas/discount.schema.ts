@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import { Document } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'discounts' })
 export class Discount {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Shop', required: true })
-  shopId: mongoose.Schema.Types.ObjectId;
+  @Prop({ type:String, ref: 'Shop', required: true })
+  shopId: string;
 
   @Prop({ type: String, enum: ['percentage', 'fixed'], required: true })
   discountType: string;

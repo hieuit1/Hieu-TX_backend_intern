@@ -3,8 +3,8 @@ import mongoose, { Document } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'shops' })
 export class Shop {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  ownerId: mongoose.Types.ObjectId;
+  @Prop({ type: String, ref: 'User', required: true })
+  ownerId: string;
 
   @Prop({ type: String, default: '' })
   name: string;

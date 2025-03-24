@@ -1,14 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ObjectId } from 'mongodb';
 import { Document } from 'mongoose';
 
 @Schema()
 export class CartItem {
-  @Prop({ type: ObjectId, ref: 'Product', required: true })
-  productId: ObjectId;
+  @Prop({ type: String, ref: 'Product', required: true })
+  productId: string;
 
-  @Prop({ type: ObjectId, ref: 'Product', required: true })
-  skuId: ObjectId;
+  @Prop({ type: String, ref: 'Product', required: true })
+  skuId: string;
 
   @Prop({ type: Number, required: true, min: 1 })
   quantity: number;

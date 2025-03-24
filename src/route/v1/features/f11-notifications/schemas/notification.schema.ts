@@ -1,15 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {  } from 'aws-sdk/clients/acm';
-import { ObjectId } from 'mongodb';
-
 
 @Schema({ timestamps: true, versionKey: false, collection: 'products' })
 export class Notification {
-  @Prop({ type: ObjectId, ref: 'User', required: true })
-  senderId: ObjectId;
+  @Prop({ type: String, ref: 'User', required: true })
+  senderId: string;
 
-  @Prop({ type: ObjectId, ref: 'User', required: true })
-  recipientId: ObjectId;
+  @Prop({ type: String, ref: 'User', required: true })
+  recipientId: string;
 
   @Prop({ type: String, default: '' })
   notificationType: string;
@@ -17,8 +14,8 @@ export class Notification {
   @Prop({ type: String, default: '' })
   entityName: string;
 
-  @Prop({ type: ObjectId, required: true })
-  entityId: ObjectId;
+  @Prop({ type: String, required: true })
+  entityId: string;
 
   @Prop({ type: String, required: true })
   title: string;

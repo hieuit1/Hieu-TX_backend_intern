@@ -3,11 +3,11 @@ import mongoose, { Document } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'products' })
 export class Product {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Shop', required: true })
-  shopId: mongoose.Schema.Types.ObjectId;
+  @Prop({ type: String, ref: 'Shop', required: true })
+  shopId: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true })
-  categoryId: mongoose.Schema.Types.ObjectId;
+  @Prop({ type: String, ref: 'Category', required: true })
+  categoryId: string;
 
   @Prop({ type: String, required: true })
   name: string;

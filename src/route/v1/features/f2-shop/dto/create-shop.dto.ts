@@ -1,9 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import mongoose from 'mongoose';
+import { IsBoolean, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
 
 export default class CreateShopDto {
+  @IsMongoId()
   @IsNotEmpty()
-  ownerId: mongoose.Schema.Types.ObjectId;
+  ownerId: string;
 
   @IsNotEmpty()
   @IsString()
