@@ -18,11 +18,11 @@ export class Product {
   @Prop({ type: Number, default: 0})
   price: number;
 
-  @Prop({ type: [String], default: [] })
-  images: string[];
-
   @Prop({type :Boolean, default : true})
   isActive: boolean;
+
+  @Prop({ type: [String], default: [] })
+  images: string[];
 }
 
 export type ProductDocument = Product & Document;

@@ -3,23 +3,23 @@ import  { Document } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'orders' })
 export class Order {
-  @Prop({ type: String, ref: 'Order', required: true })
-  orderId: string;
+  @Prop({ type: String, ref: 'User', required: true })
+  userId: string;
 
-  @Prop({ type: String, ref: 'Product', required: true })
-  productId: string;
+  @Prop({ type: String, ref: 'Shop', required: true })
+  shopId: string;
 
-  @Prop({ type: String, ref: 'Sku', required: true })
-  skuId: string;
+  @Prop({ type: String, ref: 'Discount' })
+  discountId?: string;
 
-  @Prop({type : Number,  default : 0})
-  price: number;
+  @Prop({ type: String, ref: 'ShippingMethod' })
+  shippingMethodId?: string;
 
-  @Prop({type : Number,  default : 0 })
-  quantity: number;
+  @Prop({ type: Number, required: true })
+  totalAmount: number;
 
-  @Prop({type : Number, default : 0})
-  total: number;
+  @Prop({ type: String, enum: ['pending', 'processing', 'shipped', 'completed', 'canceled'], default: 'pending' })
+  status: string;
 }
 
 export type OrderDocument = Order & Document;
