@@ -2,6 +2,7 @@ import { ApiQueryParams } from '@decorator/api-query-params.decorator';
 import AqpDto from '@interceptor/aqp/aqp.dto';
 import WrapResponseInterceptor from '@interceptor/wrap-response.interceptor';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,17 +14,14 @@ import {
   Put,
   Query,
   UseInterceptors,
-  Req,
-  UnauthorizedException,
-  BadRequestException
 } from '@nestjs/common';
-import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
-import CreateCartDto from './dto/create-cart.dto';
-import UpdateCartDto from './dto/update-cart.dto';
 import CartService from './cart.service';
+import CreateCartDto from './dto/create-cart.dto';
+import { RemoveItemDto } from './dto/remove-item.dto';
+import UpdateCartDto from './dto/update-cart.dto';
 
 @ApiTags('Carts')
 @UseInterceptors(WrapResponseInterceptor)
@@ -58,21 +56,21 @@ export default class CartController {
     return result;
   }
 
-    /**
+  /**
    * Add to cart
    *
    * @param body
    * @returns
    */
-    @Post('add-to-cart')
-    @HttpCode(200)
-    async addToCart(
-      @Body() body: { userId: string; items: CreateCartDto['items'] },
-    ) {
-      if (!body.userId) throw new BadRequestException('User ID is required');
+  @Post('add-to-cart')
+  @HttpCode(200)
+  async addToCart(
+    @Body() body: { userId: string; items: CreateCartDto['items'] },
+  ) {
+    if (!body.userId) throw new BadRequestException('User ID is required');
 
-      return this.cartService.addToCart(body.userId, body.items);
-    }
+    return this.cartService.addToCart(body.userId, body.items);
+  }
   /**
    * Update by ID
    *
@@ -120,6 +118,15 @@ export default class CartController {
     const result = await this.cartService.deleteOneHardById(id);
 
     return result;
+  }
+
+  @Delete('remove-from-cart/:userId/:skuId')
+  async removeFromCart(@Param() removeItemDto: RemoveItemDto) {
+    console.log('RemoveItemDto:', removeItemDto);
+    return this.cartService.removeFromCart(
+      removeItemDto.userId,
+      removeItemDto.skuId,
+    );
   }
 
   /**

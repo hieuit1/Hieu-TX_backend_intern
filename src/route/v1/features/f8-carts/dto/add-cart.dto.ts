@@ -1,4 +1,4 @@
-import { IsMongoId, IsNotEmpty, IsNumber, Min } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsNumber, IsString, Min } from "class-validator";
 
 export default class AddToCartDto {
     @IsNotEmpty()

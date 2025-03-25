@@ -6,7 +6,7 @@ export class ItemDto {
     productId: string;
   
     @IsNotEmpty()
-    @IsMongoId()
+    @IsMongoId() 
     skuId: string;
   
     @IsNotEmpty()
