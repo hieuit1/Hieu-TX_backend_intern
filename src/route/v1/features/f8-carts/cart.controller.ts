@@ -20,7 +20,7 @@ import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
 import CartService from './cart.service';
 import CreateCartDto from './dto/create-cart.dto';
-import { RemoveItemDto } from './dto/remove-item.dto';
+import { RemoveItemDto } from './dto/remove-item-cart.dto';
 import UpdateCartDto from './dto/update-cart.dto';
 
 @ApiTags('Carts')
