@@ -29,6 +29,16 @@ import UpdateCartDto from './dto/update-cart.dto';
 export default class CartController {
   constructor(private readonly cartService: CartService) {}
 
+  @Get('total/:userId')
+  @HttpCode(200)
+  async totalCart(
+    @Param('userId') userId: string,
+    @Query() query: any,
+  ): Promise<any> {
+    const result = await this.cartService.totalCart(userId, query.filter);
+    return result;
+  }
+
   /**
    * Find all
    *
@@ -37,8 +47,11 @@ export default class CartController {
    */
   @Get('')
   @HttpCode(200)
-  async findAll(@Query() query: any): Promise<any> {
-    const result = await this.cartService.findManyBy(query);
+  async findAll(
+    @Query() { filter, population, ...option }: AqpDto,
+  ): Promise<any> {
+    console.log(population);
+    const result = await this.cartService.findManyBy(filter);
     return result;
   }
 

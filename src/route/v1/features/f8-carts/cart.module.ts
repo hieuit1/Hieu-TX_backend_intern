@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Cart, CartSchema } from './schemas/cart.schema';
+import ProductModule from '../f3-products/product.module';
 import CartController from './cart.controller';
 import CartRepository from './cart.repository';
 import CartService from './cart.service';
+import { Cart, CartSchema } from './schemas/cart.schema';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import CartService from './cart.service';
         schema: CartSchema,
       },
     ]),
+    ProductModule,
   ],
   controllers: [CartController],
   providers: [CartService, CartRepository],

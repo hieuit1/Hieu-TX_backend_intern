@@ -6,9 +6,8 @@ export class Cart {
   @Prop({ type: String, ref: 'User', required: true })
   userId: string;
 
-  @Prop({type : [CartItemSchema], default : []})
+  @Prop({ type: [CartItemSchema], default: [] })
   items: CartItem[];
-
 }
 
 export type CartDocument = Cart & Document;

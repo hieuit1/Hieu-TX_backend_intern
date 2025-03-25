@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
+import ProductService from '../f3-products/product.service';
 import CartRepository from './cart.repository';
 import CreateCartDto from './dto/create-cart.dto';
 import { CartItem } from './schemas/cart-item.schema';
@@ -16,9 +17,33 @@ export default class CartService extends BaseService<CartDocument> {
   constructor(
     readonly logger: CustomLoggerService,
     readonly cartRepository: CartRepository,
+    readonly productService: ProductService,
   ) {
     super(logger, cartRepository);
   }
+
+  async totalCart(userId: string, filter: any) {
+    const cart = await this.cartRepository.findOneBy(
+      { userId },
+      {
+        populate: {
+          path: 'items',
+          populate: { path: 'skuId' },
+        },
+      },
+    );
+    if (!cart) throw new NotFoundException('');
+
+    console.log(cart);
+    let total = 0;
+    cart.items.forEach((item: any) => {
+      console.log(item);
+      total += item.skuId.price * item.quantity;
+    });
+
+    return total;
+  }
+
   /**
    * Add products to cart (supporting SKU)
    * @param userId

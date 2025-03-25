@@ -6,7 +6,7 @@ export class CartItem {
   @Prop({ type: String, ref: 'Product', required: true })
   productId: string;
 
-  @Prop({ type: String, ref: 'Product', required: true })
+  @Prop({ type: String, ref: 'Sku', required: true })
   skuId: string;
 
   @Prop({ type: Number, required: true, min: 1 })
@@ -15,4 +15,3 @@ export class CartItem {
 
 export type CartItemDocument = CartItem & Document;
 export const CartItemSchema = SchemaFactory.createForClass(CartItem);
-
