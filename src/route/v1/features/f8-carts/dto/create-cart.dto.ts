@@ -10,5 +10,5 @@ export default class CreateCartDto {
   @IsArray()
   @ValidateNested({each: true})
   @Type(() => ItemDto)
-  items: ItemDto
+  items: ItemDto[]
 }

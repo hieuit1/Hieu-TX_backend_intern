@@ -13,7 +13,11 @@ import {
   Put,
   Query,
   UseInterceptors,
+  Req,
+  UnauthorizedException,
+  BadRequestException
 } from '@nestjs/common';
+import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
@@ -54,6 +58,21 @@ export default class CartController {
     return result;
   }
 
+    /**
+   * Add to cart
+   *
+   * @param body
+   * @returns
+   */
+    @Post('add-to-cart')
+    @HttpCode(200)
+    async addToCart(
+      @Body() body: { userId: string; items: CreateCartDto['items'] },
+    ) {
+      if (!body.userId) throw new BadRequestException('User ID is required');
+
+      return this.cartService.addToCart(body.userId, body.items);
+    }
   /**
    * Update by ID
    *
