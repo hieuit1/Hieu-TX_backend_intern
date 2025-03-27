@@ -1,11 +1,6 @@
 import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { Types } from 'mongoose';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import ProductService from '../f3-products/product.service';
 import CartRepository from './cart.repository';
 import CreateCartDto from './dto/create-cart.dto';
@@ -73,35 +68,39 @@ export default class CartService extends BaseService<CartDocument> {
     return cart;
   }
 
+  async getProductInCart(userId: string, skuId: string) {
+    const cart = this.cartRepository.findOneBy({ userId });
+    if (!cart) {
+      throw new NotFoundException('this cart is exits');
+    }
+
+    const exitingItem = this.cartRepository.findOneBy({ skuId });
+    if (!exitingItem) {
+      throw new NotFoundException('this product is exiting in cart');
+    }
+
+    return cart;
+  }
+
   async removeFromCart(userId: string, skuId: string) {
-    if (!Types.ObjectId.isValid(userId)) {
-      throw new BadRequestException('userId không hợp lệ');
-    }
-
-    if (!Types.ObjectId.isValid(skuId)) {
-      throw new BadRequestException('skuId không hợp lệ');
-    }
-
-    const objectUserId = new Types.ObjectId(userId);
-    const objectSkuId = new Types.ObjectId(skuId);
-
-    const cart = await this.cartRepository.findOneBy({ userId: objectUserId });
+    const cart = await this.cartRepository.findOneBy({ userId });
 
     if (!cart) {
-      throw new NotFoundException('Giỏ hàng không tồn tại');
+      throw new NotFoundException('this cart does not exist');
     }
 
-    const updatedItems = cart.items.filter(
-      (item: CartItem) => item.skuId !== objectSkuId.toHexString(),
+    const itemExists = cart.items.filter(
+      (item: CartItem) => item.skuId === skuId,
     );
 
-    if (updatedItems.length === cart.items.length) {
-      throw new NotFoundException('Sản phẩm không tồn tại trong giỏ hàng');
+    if (!itemExists) {
+      throw new NotFoundException(`item with skuId ${skuId} not found in cart`);
     }
 
-    cart.items = updatedItems;
-    await this.cartRepository.updateOneById(cart._id, { items: updatedItems });
+    cart.items = cart.items.filter((item: CartItem) => item.skuId !== skuId);
 
-    return { message: 'Sản phẩm đã được xóa khỏi giỏ hàng', cart };
+    await this.cartRepository.updateOneById(cart._id, { items: cart.items });
+
+    return { message: 'product has been reromve from the cart', cart };
   }
 }

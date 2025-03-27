@@ -20,7 +20,6 @@ import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
 import CartService from './cart.service';
 import CreateCartDto from './dto/create-cart.dto';
-import { RemoveItemDto } from './dto/remove-item-cart.dto';
 import UpdateCartDto from './dto/update-cart.dto';
 
 @ApiTags('Carts')
@@ -134,12 +133,13 @@ export default class CartController {
   }
 
   @Delete('remove-from-cart/:userId/:skuId')
-  async removeFromCart(@Param() removeItemDto: RemoveItemDto) {
-    console.log('RemoveItemDto:', removeItemDto);
-    return this.cartService.removeFromCart(
-      removeItemDto.userId,
-      removeItemDto.skuId,
-    );
+  async removeFromCart(
+    @Param('userId') userId: string,
+    @Param('skuId') skuId: string,
+  ) {
+    const result = this.cartService.removeFromCart(userId, skuId);
+
+    return result;
   }
 
   /**
@@ -152,6 +152,15 @@ export default class CartController {
   @HttpCode(200)
   async paginate(@ApiQueryParams() query: AqpDto): Promise<any> {
     return this.cartService.paginate(query);
+  }
+
+  @Get('getProductFromCart/:userId/:skuId')
+  @HttpCode(200)
+  async getProductIncart(
+    @Param('userId') userId: string,
+    @Param('skuId') skuId: string,
+  ) {
+    return this.cartService.getProductInCart(userId, skuId);
   }
 
   /**
