@@ -1,6 +1,6 @@
 import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ShippingMethodDocument } from './schemas/shipping-method.schema';
 import ShippingMethodRepository from './shipping-method.repository';
 
@@ -11,5 +11,13 @@ export default class ShippingMethodService extends BaseService<ShippingMethodDoc
     readonly shippingMethodRepository: ShippingMethodRepository,
   ) {
     super(logger, shippingMethodRepository);
+  }
+
+  async getShippingCost(shopId: string): Promise<number> {
+    const shipping = await this.shippingMethodRepository.findOneBy({ shopId });
+    if (!shipping) {
+      throw new NotFoundException('shipping method not found');
+    }
+    return shipping.cost;
   }
 }

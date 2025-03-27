@@ -28,6 +28,8 @@ import StaticS3Module from './common/c5-static-s3/static-s3.module';
 import ProvinceModule from './common/c6-province/province.module';
 import DistrictModule from './common/c7-district/district.module';
 import VillageModule from './common/c8-village/village.module';
+import OtherModule from './features/f0-other/other.module';
+import OrderItemModule from './features/f10-orders-items/order-item.module';
 import ShopModule from './features/f2-shop/shop.module';
 import ProductModule from './features/f3-products/product.module';
 import CategoryModule from './features/f4-categories/category.module';
@@ -36,9 +38,6 @@ import ShippingMethodModule from './features/f6-shipping-methods/shipping-method
 import SkuModule from './features/f7-skus/sku.module';
 import CartModule from './features/f8-carts/cart.module';
 import OrderModule from './features/f9-orders/order.module';
-import OrderItemModule from './features/f10-orders-items/order-item.module';
-
-
 
 const routes: Routes = [
   {
@@ -76,17 +75,17 @@ const routes: Routes = [
       { path: '/cron-settings', module: CronSettingModule },
       { path: '/tests', module: TestModule },
       { path: '/app-subscriptions', module: AppSubscriptionModule },
-      { path: '/shops', module : ShopModule},
-      { path: '/products', module : ProductModule},
-      { path: '/categories', module : CategoryModule},
-      { path: '/discounts', module : DiscountModule},
-      { path: '/shipping-methods', module : ShippingMethodModule},
-      { path: '/skus', module : SkuModule},
-      { path: '/carts', module : CartModule},
-      { path: '/orders', module : OrderModule},
-      { path: '/order-items', module : OrderItemModule},
-      { path: '/notifications', module : NotificationModule},
-      
+      { path: '/shops', module: ShopModule },
+      { path: '/products', module: ProductModule },
+      { path: '/categories', module: CategoryModule },
+      { path: '/discounts', module: DiscountModule },
+      { path: '/shipping-methods', module: ShippingMethodModule },
+      { path: '/skus', module: SkuModule },
+      { path: '/carts', module: CartModule },
+      { path: '/orders', module: OrderModule },
+      { path: '/order-items', module: OrderItemModule },
+      { path: '/notifications', module: NotificationModule },
+      { path: '/other', module: OtherModule },
     ],
   },
 ];
@@ -141,7 +140,7 @@ const imports = [
   OrderModule,
   OrderItemModule,
   NotificationModule,
-
+  OtherModule,
 ];
 
 if (ShareFunction.checkIsConfigS3Storage()) {

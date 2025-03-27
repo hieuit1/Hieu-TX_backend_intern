@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import { Document } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'products' })
 export class Product {
@@ -15,10 +15,10 @@ export class Product {
   @Prop({ type: String, default: '' })
   description: string;
 
-  @Prop({ type: Number, default: 0})
+  @Prop({ type: Number, default: 0 })
   price: number;
 
-  @Prop({type :Boolean, default : true})
+  @Prop({ type: Boolean, default: true })
   isActive: boolean;
 
   @Prop({ type: [String], default: [] })

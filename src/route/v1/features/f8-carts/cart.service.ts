@@ -34,7 +34,7 @@ export default class CartService extends BaseService<CartDocument> {
     );
     if (!cart) throw new NotFoundException('');
 
-    console.log(cart);
+    // console.log(cart);
     let total = 0;
     cart.items.forEach((item: any) => {
       console.log(item);
@@ -61,7 +61,7 @@ export default class CartService extends BaseService<CartDocument> {
         );
 
         if (existingItem) {
-          throw new BadRequestException(`Sản phẩm đã được thêm vào`);
+          existingItem.quantity += newItem.quantity;
         } else {
           cart.items.push(newItem);
         }
