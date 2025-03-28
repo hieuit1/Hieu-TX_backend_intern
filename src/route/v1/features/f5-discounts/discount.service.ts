@@ -13,20 +13,16 @@ export default class DiscountService extends BaseService<DiscountDocument> {
     super(logger, discountRepository);
   }
 
-  async getVoucherDiscount(shopId: string, totalCart: number) {
+  async VoucherDiscount(shopId: string, subToTal: number) {
     const voucher = await this.discountRepository.findOneBy({ shopId });
 
-    if (!voucher) {
-      return 0;
-    }
-
-    if (totalCart < voucher.minOrderValue) {
+    if (!voucher || subToTal < voucher.minOrderValue) {
       return 0;
     }
 
     let discountAmount = 0;
     if (voucher.discountType === 'percentage') {
-      discountAmount = (totalCart * voucher.discountValue) / 100;
+      discountAmount = (subToTal * voucher.discountValue) / 100;
     } else if (voucher.discountType === 'fixed') {
       discountAmount = voucher.discountValue;
     }

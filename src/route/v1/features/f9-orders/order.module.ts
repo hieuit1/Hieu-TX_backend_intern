@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Order, OrderSchema } from './schemas/order.schema';
+import DiscountModule from '../f5-discounts/discount.module';
 import OrderController from './order.controller';
 import OrderRepository from './order.repository';
 import OrderService from './order.service';
+import { Order, OrderSchema } from './schemas/order.schema';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import OrderService from './order.service';
         schema: OrderSchema,
       },
     ]),
+    DiscountModule,
   ],
   controllers: [OrderController],
   providers: [OrderService, OrderRepository],

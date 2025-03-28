@@ -3,7 +3,7 @@ import CustomLoggerService from '@lazy-module/logger/logger.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import ProductService from '../f3-products/product.service';
 import CartRepository from './cart.repository';
-import CreateCartDto from './dto/create-cart.dto';
+import AddItemDto from './dto/add-item.dto';
 import { CartItem } from './schemas/cart-item.schema';
 import { CartDocument } from './schemas/cart.schema';
 
@@ -17,55 +17,43 @@ export default class CartService extends BaseService<CartDocument> {
     super(logger, cartRepository);
   }
 
-  async totalCart(userId: string, filter: any) {
+  async getMyCart(userId: string) {
     const cart = await this.cartRepository.findOneBy(
       { userId },
       {
-        populate: {
-          path: 'items',
-          populate: { path: 'skuId' },
-        },
+        populate: [
+          {
+            path: 'items.productId',
+          },
+          {
+            path: 'items.skuId',
+          },
+        ],
       },
     );
-    if (!cart) throw new NotFoundException('');
 
-    // console.log(cart);
-    let total = 0;
-    cart.items.forEach((item: any) => {
-      console.log(item);
-      total += item.skuId.price * item.quantity;
-    });
+    if (!cart) return this.cartRepository.create({ userId, items: [] });
 
-    return total;
+    return cart;
   }
 
-  /**
-   * Add products to cart (supporting SKU)
-   * @param userId
-   * @param items
-   * @returns Updated Cart
-   */
-  async addToCart(userId: string, items: CreateCartDto['items']) {
-    let cart = await this.cartRepository.findOneBy({ userId });
-    if (!cart) {
-      cart = await this.cartRepository.create({ userId, items });
+  async addItemToCart(cartId: string, input: AddItemDto) {
+    const cart: CartDocument = await this.cartRepository.findOneById(cartId);
+
+    const itemIndex = cart.items.findIndex(
+      (item) => item.productId == input.productId && item.skuId === input.skuId,
+    );
+
+    if (itemIndex === -1) {
+      cart.items.push(input);
     } else {
-      items.forEach((newItem) => {
-        const existingItem = cart.items.find(
-          (item: CartItem) => item.skuId.toString() === newItem.skuId,
-        );
-
-        if (existingItem) {
-          existingItem.quantity += newItem.quantity;
-        } else {
-          cart.items.push(newItem);
-        }
-      });
-
-      // updata cart
-      await this.cartRepository.updateOneById(cart._id, { items: cart.items });
+      cart.items[itemIndex].quantity += input.quantity;
     }
-    return cart;
+
+    // @ts-ignore
+    return this.cartRepository.updateOneById(cart._id, {
+      items: cart.items,
+    });
   }
 
   async getProductInCart(userId: string, skuId: string) {

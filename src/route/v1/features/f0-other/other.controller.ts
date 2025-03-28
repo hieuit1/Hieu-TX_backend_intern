@@ -151,11 +151,19 @@ export default class OtherController {
     return result;
   }
 
-  @Get('checkout/:userId/:shopId')
-  async checkout(
-    @Param('userId') userId: string,
-    @Param('shopId') shopId: string,
-  ) {
-    return this.otherService.checkout(userId, shopId);
-  }
+  // @Get('orders/checkout/review')
+  // async checkout(
+  //   @Param('userId') userId: string,
+  //   @Param('shopId') shopId: string,
+  // ) {
+  //   return this.otherService.checkout(userId, shopId);
+  // }
+
+  // @Get('orders/checkout')
+  // async checkout(
+  //   @Param('userId') userId: string,
+  //   @Param('shopId') shopId: string,
+  // ) {
+  //   return this.otherService.checkout(userId, shopId);
+  // }
 }

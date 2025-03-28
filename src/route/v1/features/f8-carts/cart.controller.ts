@@ -2,7 +2,6 @@ import { ApiQueryParams } from '@decorator/api-query-params.decorator';
 import AqpDto from '@interceptor/aqp/aqp.dto';
 import WrapResponseInterceptor from '@interceptor/wrap-response.interceptor';
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,14 +11,13 @@ import {
   Param,
   Post,
   Put,
-  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
 import CartService from './cart.service';
-import CreateCartDto from './dto/create-cart.dto';
+import AddItemDto from './dto/add-item.dto';
 import UpdateCartDto from './dto/update-cart.dto';
 
 @ApiTags('Carts')
@@ -28,44 +26,17 @@ import UpdateCartDto from './dto/update-cart.dto';
 export default class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  @Get('total/:userId')
-  @HttpCode(200)
-  async totalCart(
-    @Param('userId') userId: string,
-    @Query() query: any,
-  ): Promise<any> {
-    const result = await this.cartService.totalCart(userId, query.filter);
-    return result;
-  }
-
   /**
-   * Find all
-   *
-   * @param query
-   * @returns
-   */
-  @Get('')
-  @HttpCode(200)
-  async findAll(
-    @Query() { filter, population, ...option }: AqpDto,
-  ): Promise<any> {
-    console.log(population);
-    const result = await this.cartService.findManyBy(filter);
-    return result;
-  }
-
-  /**
-   * Create
+   * get my cart
    *
    * @param body
    * @returns
    */
-  @Post('')
-  @HttpCode(201)
-  async create(@Body() body: CreateCartDto): Promise<any> {
-    const result = await this.cartService.create(body);
-
-    return result;
+  @Get('users/:userId')
+  @HttpCode(200)
+  async getMyCart(@Param('userId', ParseObjectIdPipe) userId: string) {
+    // @GetCurrentUserId() userId: string
+    return this.cartService.getMyCart(userId);
   }
 
   /**
@@ -74,15 +45,35 @@ export default class CartController {
    * @param body
    * @returns
    */
-  @Post('add-to-cart')
+  @Post('/:cartId/item')
   @HttpCode(200)
-  async addToCart(
-    @Body() body: { userId: string; items: CreateCartDto['items'] },
+  async addItemToCart(
+    @Param('cartId', ParseObjectIdPipe) cartId: string,
+    @Body() body: AddItemDto,
   ) {
-    if (!body.userId) throw new BadRequestException('User ID is required');
-
-    return this.cartService.addToCart(body.userId, body.items);
+    return this.cartService.addItemToCart(cartId, body);
   }
+
+  /**
+   * Add to cart
+   *
+   * @param body
+   * @returns
+   */
+  @Put('/:cartId/items/:itemId/remove')
+  @HttpCode(200)
+  async removeItemFromCart() {}
+
+  @Delete('remove-from-cart/:userId/:skuId')
+  async removeFromCart(
+    @Param('userId') userId: string,
+    @Param('skuId') skuId: string,
+  ) {
+    const result = this.cartService.removeFromCart(userId, skuId);
+
+    return result;
+  }
+
   /**
    * Update by ID
    *
@@ -128,16 +119,6 @@ export default class CartController {
     @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
   ): Promise<any> {
     const result = await this.cartService.deleteOneHardById(id);
-
-    return result;
-  }
-
-  @Delete('remove-from-cart/:userId/:skuId')
-  async removeFromCart(
-    @Param('userId') userId: string,
-    @Param('skuId') skuId: string,
-  ) {
-    const result = this.cartService.removeFromCart(userId, skuId);
 
     return result;
   }

@@ -1,13 +1,21 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { CartItem, CartItemSchema } from './cart-item.schema';
+import AddItemDto from '../dto/add-item.dto';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'carts' })
 export class Cart {
   @Prop({ type: String, ref: 'User', required: true })
   userId: string;
 
-  @Prop({ type: [CartItemSchema], default: [] })
-  items: CartItem[];
+  @Prop([
+    {
+      type: {
+        productId: { type: String, ref: 'Product' },
+        skuId: { type: String, ref: 'Sku' },
+        quantity: Number,
+      },
+    },
+  ])
+  items: AddItemDto[];
 }
 
 export type CartDocument = Cart & Document;

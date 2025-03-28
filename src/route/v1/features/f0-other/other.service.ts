@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import DiscountService from '../f5-discounts/discount.service';
 import ShippingMethodService from '../f6-shipping-methods/shipping-method.service';
 import CartService from '../f8-carts/cart.service';
+import CheckoutReviewDto from '../f9-orders/dto/checkout-review.dto';
 import OtherRepository from './other.repository';
 import { OtherDocument } from './schemas/other.schema';
 
@@ -19,23 +20,16 @@ export default class OtherService extends BaseService<OtherDocument> {
     super(logger, otherRepository);
   }
 
-  async checkout(userId: string, shopId: string) {
-    const totalCart = await this.cartService.totalCart(userId, {});
+  async checkout(userId: string, input: CheckoutReviewDto) {
+    // const inputReviewed = await this.orderService.checkoutReview(input
+    // create order
+    // create orderItems: inputREviewd.items.map(item => ({...item, orderId}))
+    // remove items in  carts
+    // reduce discount quantity
+    // reduce product/sku stock
+    // return order
+
+    const totalCart = 0;
     console.log('Total cart:', totalCart);
-
-    const costShipping = await this.shippingMethodService.getShippingCost(
-      shopId,
-    );
-    console.log('costShipping', costShipping);
-
-    const voucherDiscount = await this.discountService.getVoucherDiscount(
-      shopId,
-      totalCart,
-    );
-    console.log('vocherDisscount', voucherDiscount);
-
-    const totalPayment = totalCart + costShipping - voucherDiscount;
-
-    return { totalCart, costShipping, voucherDiscount, totalPayment };
   }
 }
