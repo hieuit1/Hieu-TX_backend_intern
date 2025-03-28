@@ -55,22 +55,18 @@ export default class CartController {
   }
 
   /**
-   * Add to cart
+   * remove from cart
    *
    * @param body
    * @returns
    */
   @Put('/:cartId/items/:itemId/remove')
   @HttpCode(200)
-  async removeItemFromCart() {}
-
-  @Delete('remove-from-cart/:userId/:skuId')
-  async removeFromCart(
-    @Param('userId') userId: string,
-    @Param('skuId') skuId: string,
+  async removeItemFromCart(
+    @Param('cartId') cartId: string,
+    @Param('itemId') itemId: string,
   ) {
-    const result = this.cartService.removeFromCart(userId, skuId);
-
+    const result = this.cartService.removeFromCart(cartId, itemId);
     return result;
   }
 

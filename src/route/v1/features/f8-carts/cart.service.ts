@@ -4,7 +4,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import ProductService from '../f3-products/product.service';
 import CartRepository from './cart.repository';
 import AddItemDto from './dto/add-item.dto';
-import { CartItem } from './schemas/cart-item.schema';
 import { CartDocument } from './schemas/cart.schema';
 
 @Injectable()
@@ -70,25 +69,26 @@ export default class CartService extends BaseService<CartDocument> {
     return cart;
   }
 
-  async removeFromCart(userId: string, skuId: string) {
-    const cart = await this.cartRepository.findOneBy({ userId });
+  async removeFromCart(cartId: string, itemId: string) {
+    const cart = await this.cartRepository.findOneBy({ _id: cartId });
 
     if (!cart) {
       throw new NotFoundException('this cart does not exist');
     }
 
-    const itemExists = cart.items.filter(
-      (item: CartItem) => item.skuId === skuId,
+    const itemIndex = cart.items.findIndex(
+      (item: any) => item._id.toString() === itemId,
     );
 
-    if (!itemExists) {
-      throw new NotFoundException(`item with skuId ${skuId} not found in cart`);
+    if (itemIndex === -1) {
+      throw new NotFoundException(`itemId ${itemId} not found in cart`);
     }
 
-    cart.items = cart.items.filter((item: CartItem) => item.skuId !== skuId);
+    // cart.items = cart.items.filter((item: any) => item._id !== itemId);
+    cart.items.splice(itemIndex, 1);
 
     await this.cartRepository.updateOneById(cart._id, { items: cart.items });
 
-    return { message: 'product has been reromve from the cart', cart };
+    return { message: 'item has been reromve from the cart', cart };
   }
 }

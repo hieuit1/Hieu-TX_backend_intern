@@ -27,6 +27,7 @@ export default class OtherService extends BaseService<OtherDocument> {
     // remove items in  carts
     // reduce discount quantity
     // reduce product/sku stock
+    // send notification
     // return order
 
     const totalCart = 0;
