@@ -1,6 +1,6 @@
 import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import DiscountRepository from './discount.repository';
 import { DiscountDocument } from './schemas/discount.schema';
 
@@ -13,11 +13,17 @@ export default class DiscountService extends BaseService<DiscountDocument> {
     super(logger, discountRepository);
   }
 
-  async VoucherDiscount(shopId: string, subToTal: number) {
-    const voucher = await this.discountRepository.findOneBy({ shopId });
+  async VoucherDiscount(discountId: string, subToTal: number) {
+    const voucher = await this.discountRepository.findOneBy({
+      _id: discountId,
+    });
 
-    if (!voucher || subToTal < voucher.minOrderValue) {
-      return 0;
+    if (!voucher) {
+      throw new BadRequestException('this voucher is not exist');
+    }
+
+    if (subToTal < voucher.minOrderValue) {
+      throw new BadRequestException('This voucher is not condition to apply.');
     }
 
     let discountAmount = 0;

@@ -17,6 +17,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
+import OrderService from '../f9-orders/order.service';
 import CreateOtherDto from './dto/create-other.dto';
 import UpdateOtherDto from './dto/update-other.dto';
 import OtherService from './other.service';
@@ -25,7 +26,10 @@ import OtherService from './other.service';
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class OtherController {
-  constructor(private readonly otherService: OtherService) {}
+  constructor(
+    private readonly otherService: OtherService,
+    readonly orderService: OrderService,
+  ) {}
 
   /**
    * Find all
@@ -152,11 +156,8 @@ export default class OtherController {
   }
 
   // @Get('orders/checkout/review')
-  // async checkout(
-  //   @Param('userId') userId: string,
-  //   @Param('shopId') shopId: string,
-  // ) {
-  //   return this.otherService.checkout(userId, shopId);
+  // async checkout(@Query() input: CheckoutReviewDto) {
+  //   return this.orderService.checkoutReview(input);
   // }
 
   // @Get('orders/checkout')

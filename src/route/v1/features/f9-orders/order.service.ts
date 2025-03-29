@@ -1,7 +1,8 @@
 import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import DiscountService from '../f5-discounts/discount.service';
+import ShippingMethodService from '../f6-shipping-methods/shipping-method.service';
 import CheckoutReviewDto from './dto/checkout-review.dto';
 import OrderRepository from './order.repository';
 import { OrderDocument } from './schemas/order.schema';
@@ -12,6 +13,7 @@ export default class OrderService extends BaseService<OrderDocument> {
     readonly logger: CustomLoggerService,
     readonly orderRepository: OrderRepository,
     readonly discountService: DiscountService,
+    readonly shippingMethodService: ShippingMethodService,
   ) {
     super(logger, orderRepository);
   }
@@ -19,39 +21,49 @@ export default class OrderService extends BaseService<OrderDocument> {
   async checkoutReview(input: CheckoutReviewDto) {
     // calc subToTal from orderItems
     const subToTal = await this._calcSubtotal(input.orderItems);
-    // calc discountAmount
 
-    // const calculateDiscountAmount = await this.discountService.VoucherDiscount(input.shopId, input.totalAmount);
-    if (!input.shopId) {
-      throw new Error('Shop ID is required');
-    }
-    const shopId = input.shopId ?? '';
+    // calc discountAmount
+    const discountId = input.discountId ?? '';
     const calculateDiscountAmount = await this.discountService.VoucherDiscount(
-      shopId,
+      discountId,
       subToTal,
     );
     // calc shipping cost
+    const shippingId = input.shippingMethodId ?? '';
+    const shippingCost = await this.shippingMethodService.getShippingCost(
+      shippingId,
+    );
+
+    // totalAmount
+    const totalAmount = subToTal + shippingCost - calculateDiscountAmount;
 
     return {
       ...input,
       checkout: {
-        // totalAmount: number;
-        // shippingCost: number;
-        // subTotal: number; // tong tien sp
-        // discountAmount: number; // tong tien giam gia
+        subTotal: subToTal, // tong tien sp
+        shippingCost: shippingCost,
+        discountAmount: calculateDiscountAmount, // tong tien giam gia
+        totalAmount: totalAmount,
       },
     };
   }
 
   private async _calcSubtotal(
     items: CheckoutReviewDto['orderItems'],
-  ): Promise<number> {
+  ): Promise<any> {
     if (!items || !Array.isArray(items)) {
-      return 0;
+      throw new NotFoundException(
+        'orderItems does not exist or is not an array',
+      );
     }
-    return items.reduce(
-      (total, item) => total + items.price * item.quantity,
-      0,
-    );
+
+    // using map tho create a new array items
+    const totalItem = items.map((item) => item.price * item.quantity);
+    console.log(totalItem);
+
+    //using reduce to calculate subtotal
+    const subToTal = totalItem.reduce((total, amount) => total + amount);
+
+    return subToTal;
   }
 }
