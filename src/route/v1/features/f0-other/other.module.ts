@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import OrderItemModule from '../f10-orders-items/order-item.module';
 import DiscountModule from '../f5-discounts/discount.module';
 import ShippingMethodModule from '../f6-shipping-methods/shipping-method.module';
+import SkuModule from '../f7-skus/sku.module';
 import CartModule from '../f8-carts/cart.module';
 import OrderModule from '../f9-orders/order.module';
 import OtherController from './other.controller';
@@ -23,6 +24,7 @@ import { Other, OtherSchema } from './schemas/other.schema';
     DiscountModule,
     OrderModule,
     OrderItemModule,
+    SkuModule,
   ],
   controllers: [OtherController],
   providers: [OtherService, OtherRepository],

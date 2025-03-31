@@ -5,6 +5,8 @@ import CreateOrderItemDto from '../f10-orders-items/dto/create-order-item.dto';
 import OrderItemService from '../f10-orders-items/order-item.service';
 import DiscountService from '../f5-discounts/discount.service';
 import ShippingMethodService from '../f6-shipping-methods/shipping-method.service';
+import SkuService from '../f7-skus/sku.service';
+import CartRepository from '../f8-carts/cart.repository';
 import CartService from '../f8-carts/cart.service';
 import CheckoutReviewDto from '../f9-orders/dto/checkout-review.dto';
 import { OrderStatus } from '../f9-orders/enums/order-status.enum';
@@ -22,6 +24,8 @@ export default class OtherService extends BaseService<OtherDocument> {
     readonly discountService: DiscountService,
     readonly orderService: OrderService,
     readonly orderItemService: OrderItemService,
+    readonly cartReponsitory: CartRepository,
+    readonly skuService: SkuService,
   ) {
     super(logger, otherRepository);
   }
@@ -46,25 +50,28 @@ export default class OtherService extends BaseService<OtherDocument> {
     //create orderItems
     const orderItems: CreateOrderItemDto[] = inputReviewed.orderItems.map(
       (item) => ({
+        ...item,
         orderId: order.id, // Gán orderId của đơn hàng mới
-        productId: item.productId,
-        skuId: item.skuId,
-        quantity: item.quantity,
-        price: item.price,
       }),
     );
 
     await this.orderItemService.createOrderItems(orderItems);
 
     // when you order successfuly  remove items in  carts
-
-    // const removoItemInCart = this.cartService.removeFromCart(userId, itemId)
+    // await Promise.all(
+    //   inputReviewed.orderItems.map((item) =>
+    //     this.cartService.removeFromCart(userId, item.productId),
+    //   ),
+    // );
 
     // reduce discount quantity in cart when you order successfully
-    //const ReduceQuatityInCart = this.cartService.discountQuantityInCart(itemId)
 
     // reduce product/sku stock
-    //const reduceProductInCart = this.cartService.discountProduct(pruductId, skuId)
+    await Promise.all(
+      inputReviewed.orderItems.map((item) =>
+        this.skuService.reduceStock(item.productId, item.skuId, item.quantity),
+      ),
+    );
 
     // send notification when you order successfuly
     //const sendNotification = this.notificationService.sendNotificaitonPayment(notificationId)
