@@ -1,8 +1,9 @@
 import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
 import { Injectable } from '@nestjs/common';
-import { OrderItemDocument } from './schemas/order-item.schema';
+import CreateOrderItemDto from './dto/create-order-item.dto';
 import OrderItemRepository from './order-item.repository';
+import { OrderItemDocument } from './schemas/order-item.schema';
 
 @Injectable()
 export default class OrderItemService extends BaseService<OrderItemDocument> {
@@ -11,5 +12,10 @@ export default class OrderItemService extends BaseService<OrderItemDocument> {
     readonly orderItemRepository: OrderItemRepository,
   ) {
     super(logger, orderItemRepository);
+  }
+
+  async createOrderItems(orderItems: CreateOrderItemDto[]) {
+    // const productId = orderItems.map(item => )
+    return await this.orderItemRepository.createMany(orderItems);
   }
 }

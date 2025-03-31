@@ -13,6 +13,17 @@ export default class DiscountService extends BaseService<DiscountDocument> {
     super(logger, discountRepository);
   }
 
+  async isDiscountExist(discountId: string) {
+    const discountExist = await this.discountRepository.findOneBy({
+      _id: discountId,
+    });
+
+    if (!discountExist) {
+      throw new BadRequestException('this discount is not exist');
+    }
+    return discountExist;
+  }
+
   async VoucherDiscount(discountId: string, subToTal: number) {
     const voucher = await this.discountRepository.findOneBy({
       _id: discountId,

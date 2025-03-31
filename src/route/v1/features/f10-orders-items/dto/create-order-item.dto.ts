@@ -3,7 +3,7 @@ import { IsMongoId, IsNotEmpty, IsNumber, Min } from 'class-validator';
 export default class CreateOrderItemDto {
   @IsNotEmpty()
   @IsMongoId()
-  orderId?: string;
+  orderId: string;
 
   @IsNotEmpty()
   @IsMongoId()

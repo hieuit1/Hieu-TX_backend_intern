@@ -5,5 +5,5 @@ import CreateOrderDto from './create-order.dto';
 
 export default class CheckoutReviewDto extends PartialType(CreateOrderDto) {
   @IsArray()
-  orderItems: CreateOrderItemDto;
+  orderItems: CreateOrderItemDto[];
 }

@@ -12,6 +12,15 @@ export default class ShippingMethodService extends BaseService<ShippingMethodDoc
   ) {
     super(logger, shippingMethodRepository);
   }
+  async isShippingExist(shippingId: string): Promise<number> {
+    const shippingExist = await this.shippingMethodRepository.findOneBy({
+      _id: shippingId,
+    });
+    if (!shippingExist) {
+      throw new NotFoundException('shipping is not exist');
+    }
+    return shippingExist;
+  }
 
   async getShippingCost(shippingId: string): Promise<number> {
     const shipping = await this.shippingMethodRepository.findOneBy({

@@ -2,6 +2,7 @@ import { ApiQueryParams } from '@decorator/api-query-params.decorator';
 import AqpDto from '@interceptor/aqp/aqp.dto';
 import WrapResponseInterceptor from '@interceptor/wrap-response.interceptor';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -17,6 +18,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
+import CheckoutReviewDto from '../f9-orders/dto/checkout-review.dto';
 import OrderService from '../f9-orders/order.service';
 import CreateOtherDto from './dto/create-other.dto';
 import UpdateOtherDto from './dto/update-other.dto';
@@ -153,6 +155,17 @@ export default class OtherController {
     if (!result) throw new NotFoundException('The item does not exist');
 
     return result;
+  }
+
+  @Post('/checkout')
+  async checkout(
+    @Body() input: { userId: string; orderItems: CheckoutReviewDto },
+  ) {
+    if (!input.userId) {
+      throw new BadRequestException('UserId is missing');
+    }
+
+    return await this.otherService.checkout(input.userId, input.orderItems);
   }
 
   // @Get('orders/checkout/review')
