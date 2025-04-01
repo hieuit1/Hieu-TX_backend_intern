@@ -46,7 +46,7 @@ export default class OtherService extends BaseService<OtherDocument> {
       discountId: inputReviewed.discountId,
       shippingMethodId: inputReviewed.shippingMethodId,
       totalAmount: inputReviewed.checkout.totalAmount,
-      status: OrderStatus.Completed,
+      status: OrderStatus.Pending,
     });
 
     //create orderItems
@@ -67,6 +67,11 @@ export default class OtherService extends BaseService<OtherDocument> {
     // );
 
     // reduce discount
+    if (inputReviewed.discountId) {
+      await this.discountService.reduceDiscountQuatity(
+        inputReviewed.discountId,
+      );
+    }
 
     // reduce product/sku stock
     await Promise.all(

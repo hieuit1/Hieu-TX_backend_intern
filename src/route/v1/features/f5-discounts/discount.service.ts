@@ -1,6 +1,10 @@
 import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import DiscountRepository from './discount.repository';
 import { DiscountDocument } from './schemas/discount.schema';
 
@@ -45,5 +49,33 @@ export default class DiscountService extends BaseService<DiscountDocument> {
     }
 
     return discountAmount;
+  }
+
+  async reduceDiscountQuatity(discountId: string) {
+    const discount = await this.discountRepository.findOneById(discountId);
+
+    if (!discount) {
+      throw new NotFoundException('discount is not exist');
+    }
+
+    const now = new Date();
+    if (new Date(discount.endDate) < now) {
+      throw new BadRequestException('đã quá hạn ngày sử dụng');
+    }
+
+    if (discount.maxDiscount <= 0) {
+      throw new BadRequestException('mã này đã hết');
+    }
+
+    const updateDiscount = await this.discountRepository.updateOneById(
+      discountId,
+      {
+        maxDiscount: discount.maxDiscount
+          ? discount.maxDiscount - 1
+          : undefined,
+      },
+    );
+
+    return updateDiscount;
   }
 }

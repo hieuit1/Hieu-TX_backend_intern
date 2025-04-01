@@ -15,7 +15,6 @@ export default class OrderItemService extends BaseService<OrderItemDocument> {
   }
 
   async createOrderItems(orderItems: CreateOrderItemDto[]) {
-    // const productId = orderItems.map(item => )
     return await this.orderItemRepository.createMany(orderItems);
   }
 }
