@@ -21,6 +21,9 @@ export class Discount {
   @Prop({ type: Number, default: 0 })
   maxOrderValue: number;
 
+  @Prop({ type: Number, default: 0 })
+  maxDiscount: number;
+
   @Prop({ type: Date, default: Date.now })
   startDate: Date;
 

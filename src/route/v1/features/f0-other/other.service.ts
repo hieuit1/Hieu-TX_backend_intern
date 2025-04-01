@@ -3,6 +3,7 @@ import CustomLoggerService from '@lazy-module/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import CreateOrderItemDto from '../f10-orders-items/dto/create-order-item.dto';
 import OrderItemService from '../f10-orders-items/order-item.service';
+import NotificationService from '../f11-notifications/notification.service';
 import DiscountService from '../f5-discounts/discount.service';
 import ShippingMethodService from '../f6-shipping-methods/shipping-method.service';
 import SkuService from '../f7-skus/sku.service';
@@ -26,6 +27,7 @@ export default class OtherService extends BaseService<OtherDocument> {
     readonly orderItemService: OrderItemService,
     readonly cartReponsitory: CartRepository,
     readonly skuService: SkuService,
+    readonly notificationService: NotificationService,
   ) {
     super(logger, otherRepository);
   }
@@ -44,7 +46,7 @@ export default class OtherService extends BaseService<OtherDocument> {
       discountId: inputReviewed.discountId,
       shippingMethodId: inputReviewed.shippingMethodId,
       totalAmount: inputReviewed.checkout.totalAmount,
-      status: OrderStatus.Pending,
+      status: OrderStatus.Completed,
     });
 
     //create orderItems
@@ -64,7 +66,7 @@ export default class OtherService extends BaseService<OtherDocument> {
     //   ),
     // );
 
-    // reduce discount quantity in cart when you order successfully
+    // reduce discount
 
     // reduce product/sku stock
     await Promise.all(
@@ -74,8 +76,13 @@ export default class OtherService extends BaseService<OtherDocument> {
     );
 
     // send notification when you order successfuly
-    //const sendNotification = this.notificationService.sendNotificaitonPayment(notificationId)
+    const sendNotification = await this.notificationService.sendNotificaiton(
+      userId,
+      order.id,
+    );
 
-    return order;
+    // console.log(sendNotification);
+
+    return { order, sendNotification };
   }
 }
