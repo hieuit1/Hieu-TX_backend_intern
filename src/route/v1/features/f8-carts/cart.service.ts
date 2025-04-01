@@ -91,4 +91,29 @@ export default class CartService extends BaseService<CartDocument> {
 
     return { message: 'item has been reromve from the cart', cart };
   }
+
+  async removeCheckoutFromCart(userId: string, itemId: string) {
+    const cart = await this.cartRepository.findOneBy({ userId });
+
+    if (!cart) {
+      throw new NotFoundException('Cart does not exist for this user');
+    }
+
+    const itemIndex = cart.items.findIndex(
+      (item: any) =>
+        item.productId.toString() === itemId ||
+        item.skuId.toString() === itemId,
+    );
+
+    if (itemIndex === -1) {
+      throw new NotFoundException(`Item ${itemId} not found in cart`);
+    }
+
+    // Xóa item khỏi giỏ hàng
+    cart.items.splice(itemIndex, 1);
+
+    await this.cartRepository.updateOneById(cart._id, { items: cart.items });
+
+    return { message: 'Item has been removed from the cart', cart };
+  }
 }

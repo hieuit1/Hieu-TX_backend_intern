@@ -60,11 +60,12 @@ export default class OtherService extends BaseService<OtherDocument> {
     await this.orderItemService.createOrderItems(orderItems);
 
     // when you order successfuly  remove items in  carts
-    // await Promise.all(
-    //   inputReviewed.orderItems.map((item) =>
-    //     this.cartService.removeFromCart(userId, item.productId),
-    //   ),
-    // );
+
+    const removeCheckoutFromCart = await Promise.all(
+      inputReviewed.orderItems.map((item) =>
+        this.cartService.removeCheckoutFromCart(userId, item.skuId),
+      ),
+    );
 
     // reduce discount
     if (inputReviewed.discountId) {
@@ -88,6 +89,6 @@ export default class OtherService extends BaseService<OtherDocument> {
 
     // console.log(sendNotification);
 
-    return { order, sendNotification };
+    return { order, sendNotification, removeCheckoutFromCart };
   }
 }
