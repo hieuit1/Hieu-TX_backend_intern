@@ -39,6 +39,10 @@ export default class OtherService extends BaseService<OtherDocument> {
     // checkoutreview product you want order
     const inputReviewed = await this.orderService.checkoutReview(input);
 
+    if (inputReviewed.checkout.totalAmount <= 0) {
+      throw new Error('tổng tiền phải lớn hơn 0');
+    }
+
     //create order
     const order = await this.orderService.createOrderCheckout({
       userId,
@@ -48,6 +52,10 @@ export default class OtherService extends BaseService<OtherDocument> {
       totalAmount: inputReviewed.checkout.totalAmount,
       status: OrderStatus.Pending,
     });
+
+    if (!order || !order.id) {
+      throw new Error('tạo đơn hàng thất bại ');
+    }
 
     //create orderItems
     const orderItems: CreateOrderItemDto[] = inputReviewed.orderItems.map(
@@ -60,7 +68,6 @@ export default class OtherService extends BaseService<OtherDocument> {
     await this.orderItemService.createOrderItems(orderItems);
 
     // when you order successfuly  remove items in  carts
-
     const removeCheckoutFromCart = await Promise.all(
       inputReviewed.orderItems.map((item) =>
         this.cartService.removeCheckoutFromCart(userId, item.skuId),
@@ -86,6 +93,10 @@ export default class OtherService extends BaseService<OtherDocument> {
       userId,
       order.id,
     );
+
+    if (!sendNotification) {
+      throw new Error('thông báo thất bại');
+    }
 
     // console.log(sendNotification);
 

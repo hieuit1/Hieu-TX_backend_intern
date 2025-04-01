@@ -168,9 +168,17 @@ export default class OtherController {
     return await this.otherService.checkout(input.userId, input.orderItems);
   }
 
-  // @Get('orders/checkout/review')
-  // async checkout(@Query() input: CheckoutReviewDto) {
-  //   return this.orderService.checkoutReview(input);
+  @Get('/checkout/userId/:userId/')
+  async getcheckout(
+    @Param('userId') userId: string,
+    @Query() input: CheckoutReviewDto,
+  ) {
+    return await this.otherService.checkout(userId, input);
+  }
+
+  // @Get('/checkout/review')
+  // async getCheckoutReview(@Query() input: CheckoutReviewDto) {
+  //   return await this.orderService.checkoutReview(input);
   // }
 
   // @Get('orders/checkout')
