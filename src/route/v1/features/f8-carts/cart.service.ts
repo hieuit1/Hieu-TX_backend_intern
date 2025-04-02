@@ -105,9 +105,9 @@ export default class CartService extends BaseService<CartDocument> {
         item.skuId.toString() === itemId,
     );
 
-    if (itemIndex === -1) {
-      throw new NotFoundException(`Item ${itemId} not found in cart`);
-    }
+    // if (itemIndex === -1) {
+    //   throw new NotFoundException(`Item ${itemId} not found in cart`);
+    // }
 
     // Xóa item khỏi giỏ hàng
     cart.items.splice(itemIndex, 1);

@@ -4,7 +4,6 @@ import GroupApiService from '@authorization/a7-group-api/group-api.service';
 import commonConstants from '@constant/common.constants';
 import ValidationExceptions from '@exception/validation.exceptions';
 import AllExceptionsFilter from '@filter/all-exceptions.filter';
-import RolesGuard from '@guard/roles.guard';
 import { ShareFunction } from '@helper/static-function';
 import { ValidationError, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';

@@ -12,6 +12,7 @@ export default class ShippingMethodService extends BaseService<ShippingMethodDoc
   ) {
     super(logger, shippingMethodRepository);
   }
+
   async isShippingExist(shippingId: string): Promise<number> {
     const shippingExist = await this.shippingMethodRepository.findOneBy({
       _id: shippingId,

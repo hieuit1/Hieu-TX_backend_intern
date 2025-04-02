@@ -1,43 +1,107 @@
+import { Type } from 'class-transformer';
 import {
-  IsDateString,
+  IsArray,
+  IsBoolean,
   IsEnum,
   IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
+import { ApplyTo } from '../enum/apply-to.enum';
+import { DiscountType } from '../enum/discount-type.enum';
+import { BulkDiscountDto } from './bulk-discountDto.discount.dto';
 
 export default class CreateDiscountDto {
-  @IsNotEmpty()
   @IsMongoId()
-  shopId: string;
-
   @IsNotEmpty()
+  catertorId: string;
+
   @IsString()
+  @IsNotEmpty()
   code: string;
 
+  @IsString()
   @IsNotEmpty()
-  @IsEnum(['percentage', 'fixed'])
-  discountType: string;
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  image: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
 
   @IsNotEmpty()
+  @IsEnum(DiscountType)
+  discountType: DiscountType;
+
   @IsNumber()
+  @IsNotEmpty()
   discountValue: number;
 
-  @IsNotEmpty()
   @IsNumber()
+  @IsOptional()
+  maxDiscountValue?: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  validFrom: number; // thời gian bắt đầu
+
+  @IsNumber()
+  @IsNotEmpty()
+  validTo: Number; // thời gian kết thúc
+
+  @IsNumber()
+  @IsOptional()
+  maxUses?: number;
+
+  @IsArray()
+  @IsOptional()
+  usersUsed?: string[];
+
+  @IsNumber()
+  @IsOptional()
+  maxUsesPerUserser?: number;
+
+  @IsNumber()
+  @IsNotEmpty()
   minOrderValue: number;
 
+  @IsBoolean()
+  @IsNotEmpty()
+  isActive: boolean;
+
+  @IsNotEmpty()
+  @IsEnum(ApplyTo)
+  applyTo: ApplyTo;
+
+  @IsArray()
   @IsOptional()
-  @IsNumber()
-  maxDiscount: number;
+  productIds?: string[];
 
-  @IsNotEmpty()
-  @IsDateString()
-  startDate: string;
+  @IsArray()
+  @IsOptional()
+  skuIds?: string;
 
-  @IsNotEmpty()
-  @IsDateString()
-  endDate: string;
+  @IsBoolean()
+  @IsOptional()
+  isSendNotification?: boolean;
+
+  @IsString()
+  @IsOptional()
+  nameEn?: string;
+
+  @IsString()
+  @IsOptional()
+  descriptionEn?: string;
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => BulkDiscountDto)
+  bulkDiscount?: BulkDiscountDto[];
 }

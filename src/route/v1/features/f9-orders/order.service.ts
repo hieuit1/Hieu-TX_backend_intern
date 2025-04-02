@@ -1,10 +1,6 @@
 import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import DiscountService from '../f5-discounts/discount.service';
 import ShippingMethodService from '../f6-shipping-methods/shipping-method.service';
 import CartRepository from '../f8-carts/cart.repository';
@@ -33,14 +29,15 @@ export default class OrderService extends BaseService<OrderDocument> {
 
     // calc discountAmount
     let calculateDiscountAmount = 0;
-    const discountId = input.discountId ?? '';
-    if (discountId) {
-      const isExist = await this.discountService.isDiscountExist(discountId);
+    if (input.discountId) {
+      const isExist = await this.discountService.isDiscountExist(
+        input.discountId,
+      );
       if (!isExist) {
         throw new NotFoundException('this discount is not exist');
       } else {
         calculateDiscountAmount = await this.discountService.VoucherDiscount(
-          discountId,
+          input.discountId,
           subToTal,
         );
       }
@@ -48,16 +45,15 @@ export default class OrderService extends BaseService<OrderDocument> {
 
     // calc shipping cost
     let shippingCost = 0;
-    const shippingId = input.shippingMethodId ?? '';
-    if (shippingId) {
+    if (input.shippingMethodId) {
       const isExist = await this.shippingMethodService.isShippingExist(
-        shippingId,
+        input.shippingMethodId,
       );
       if (!isExist) {
         throw new NotFoundException('this shipping is not exist');
       } else {
         shippingCost = await this.shippingMethodService.getShippingCost(
-          shippingId,
+          input.shippingMethodId,
         );
       }
     }
@@ -76,6 +72,17 @@ export default class OrderService extends BaseService<OrderDocument> {
     };
   }
 
+  // private async _calcSubtotal(
+  //   items: CheckoutReviewDto['orderItems'],
+  // ): Promise<any> {
+  //   if (!items) {
+  //     throw new BadRequestException('item is not exist');
+  //   }
+  //   const totalProduct = items.map((item) => item.price * item.quantity);
+
+  //   return totalProduct;
+  // }
+
   private async _calcSubtotal(
     items: CheckoutReviewDto['orderItems'],
   ): Promise<any> {
@@ -85,13 +92,16 @@ export default class OrderService extends BaseService<OrderDocument> {
       );
     }
 
-    for (const item of items) {
-      if (!item.productId) {
-        throw new BadRequestException('product is not exist');
-      } else if (!item.skuId) {
-        throw new BadRequestException('type this product is not exist');
-      }
-    }
+    // for (const item of items) {
+    //   if (!item.productId) {
+    //     throw new BadRequestException('product is not exist');
+    //   } else if (!item.skuId) {
+    //     throw new BadRequestException('type this product is not exist');
+    //   }
+    // }
+    // if (!items.some((item) => item.productId && item.skuId)) {
+    //   throw new BadRequestException('product is not exist');
+    // }
 
     // using map tho create a new array items
     const totalItem = items.map((item) => item.price * item.quantity);

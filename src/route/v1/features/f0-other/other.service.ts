@@ -33,15 +33,8 @@ export default class OtherService extends BaseService<OtherDocument> {
   }
 
   async checkout(userId: string, input: CheckoutReviewDto) {
-    if (!userId) {
-      throw new Error('UserId is missing');
-    }
     // checkoutreview product you want order
     const inputReviewed = await this.orderService.checkoutReview(input);
-
-    if (inputReviewed.checkout.totalAmount <= 0) {
-      throw new Error('tổng tiền phải lớn hơn 0');
-    }
 
     //create order
     const order = await this.orderService.createOrderCheckout({
@@ -52,10 +45,6 @@ export default class OtherService extends BaseService<OtherDocument> {
       totalAmount: inputReviewed.checkout.totalAmount,
       status: OrderStatus.Pending,
     });
-
-    if (!order || !order.id) {
-      throw new Error('tạo đơn hàng thất bại ');
-    }
 
     //create orderItems
     const orderItems: CreateOrderItemDto[] = inputReviewed.orderItems.map(
@@ -94,12 +83,6 @@ export default class OtherService extends BaseService<OtherDocument> {
       order.id,
     );
 
-    if (!sendNotification) {
-      throw new Error('thông báo thất bại');
-    }
-
-    // console.log(sendNotification);
-
-    return { order, sendNotification, removeCheckoutFromCart };
+    return order;
   }
 }

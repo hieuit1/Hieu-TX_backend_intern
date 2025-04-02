@@ -29,6 +29,7 @@ import ProvinceModule from './common/c6-province/province.module';
 import DistrictModule from './common/c7-district/district.module';
 import VillageModule from './common/c8-village/village.module';
 import OtherModule from './features/f0-other/other.module';
+import CustomerModule from './features/f1-customers/customer.module';
 import OrderItemModule from './features/f10-orders-items/order-item.module';
 import ShopModule from './features/f2-shop/shop.module';
 import ProductModule from './features/f3-products/product.module';
@@ -86,6 +87,7 @@ const routes: Routes = [
       { path: '/order-items', module: OrderItemModule },
       { path: '/notifications', module: NotificationModule },
       { path: '/other', module: OtherModule },
+      { path: '/customers', module: CustomerModule },
     ],
   },
 ];
@@ -141,6 +143,7 @@ const imports = [
   OrderItemModule,
   NotificationModule,
   OtherModule,
+  CustomerModule,
 ];
 
 if (ShareFunction.checkIsConfigS3Storage()) {

@@ -15,6 +15,6 @@ export default class OrderItemService extends BaseService<OrderItemDocument> {
   }
 
   async createOrderItems(orderItems: CreateOrderItemDto[]) {
-    return await this.orderItemRepository.createMany(orderItems);
+    return await this.orderItemRepository.create(orderItems);
   }
 }
