@@ -1,31 +1,49 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import { Document } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'shops' })
 export class Shop {
   @Prop({ type: String, ref: 'User', required: true })
-  ownerId: string;
+  userId: string;
+
+  @Prop({ type: String, required: true })
+  fullName: string;
 
   @Prop({ type: String, default: '' })
-  name: string;
+  avatar: string;
 
   @Prop({ type: String, default: '' })
-  description: string;
+  banner: string;
+
+  @Prop({ type: String, required: true })
+  socialPhone: string;
+
+  @Prop({ type: String, required: true })
+  socialEmail: string;
+
+  @Prop({ type: String, ref: 'Province', required: true })
+  provinceId: string;
+
+  @Prop({ type: String, ref: 'District', required: true })
+  districtId: string;
+
+  @Prop({ type: String, ref: 'Village', required: true })
+  villageId: string;
 
   @Prop({ type: String, default: '' })
-  logo: string;
+  street: string;
 
   @Prop({ type: String, default: '' })
-  coverImage: string;
+  location: string;
 
-  @Prop({ type: String, default: '' })
-  address: string;
+  @Prop({ type: Number, default: 0 })
+  totalRatings: number;
 
-  @Prop({type : String , required: true})
-  phone : string
+  @Prop({ type: Number, default: 0 })
+  totalReviews: number;
 
-  @Prop({ type : Boolean, default : true})
-  isActive: boolean;
+  @Prop({ type: Number, default: 0 })
+  totalProducts: number;
 }
 
 export type ShopDocument = Shop & Document;

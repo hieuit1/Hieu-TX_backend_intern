@@ -1,36 +1,66 @@
-import { IsBoolean, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-
+import {
+  IsEmail,
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export default class CreateShopDto {
   @IsMongoId()
   @IsNotEmpty()
-  ownerId: string;
+  userId: string;
 
-  @IsNotEmpty()
   @IsString()
-  name: string;
+  @IsNotEmpty()
+  fullName: string;
 
   @IsOptional()
   @IsString()
-  description: string;
-
-  @IsNotEmpty()
-  @IsString()
-  address: string;
-
-  @IsNotEmpty()
-  @IsString()
-  logo: string;
-
-  @IsNotEmpty()
-  @IsString()
-  coverImage: string;
+  avatar?: string;
 
   @IsOptional()
-  @IsBoolean()
-  isActive: boolean;
-
-  @IsNotEmpty()
   @IsString()
-  phone: string;
+  banner?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  socialPhone: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  socialEmail: string;
+
+  @IsString()
+  @IsNotEmpty()
+  provinceId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  districtId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  villageId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  street: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
+
+  @IsOptional()
+  @IsNumber()
+  totalRatings?: number;
+
+  @IsOptional()
+  @IsNumber()
+  totalReviews?: number;
+
+  @IsOptional()
+  @IsNumber()
+  totalProducts?: number;
 }
