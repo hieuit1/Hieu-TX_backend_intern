@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsMongoId,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -17,16 +18,16 @@ export default class CreateNotificationDto {
   @IsMongoId()
   recipientId: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsEnum(NotificationType)
   notificationType: NotificationType;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
   entityName?: string;
 
-  @IsNotEmpty()
   @IsMongoId()
+  @IsNotEmpty()
   entityId: string;
 
   @IsNotEmpty()
@@ -46,5 +47,14 @@ export default class CreateNotificationDto {
   isOpened?: boolean;
 
   @IsOptional()
+  @IsObject()
   options?: Record<string, any>;
+
+  @IsString()
+  @IsOptional()
+  titleEn?: string;
+
+  @IsString()
+  @IsOptional()
+  descriptionEn?: string;
 }

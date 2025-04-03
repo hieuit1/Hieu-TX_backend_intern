@@ -17,15 +17,15 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
-import CreateNotificationDto from './dto/create-notification.dto';
-import UpdateNotificationDto from './dto/update-notification.dto';
-import NotificationService from './notification.service';
+import CreateReferralDto from './dto/create-referral.dto';
+import UpdateReferralDto from './dto/update-referral.dto';
+import ReferralService from './referral.service';
 
-@ApiTags('Notifications')
+@ApiTags('Referrals')
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
-export default class NotificationController {
-  constructor(private readonly notificationService: NotificationService) {}
+export default class ReferralController {
+  constructor(private readonly referralService: ReferralService) {}
 
   /**
    * Find all
@@ -36,7 +36,7 @@ export default class NotificationController {
   @Get('')
   @HttpCode(200)
   async findAll(@Query() query: any): Promise<any> {
-    const result = await this.notificationService.findManyBy(query);
+    const result = await this.referralService.findManyBy(query);
     return result;
   }
 
@@ -48,9 +48,8 @@ export default class NotificationController {
    */
   @Post('')
   @HttpCode(201)
-  async create(@Body() body: CreateNotificationDto): Promise<any> {
-    console.log('DTO nhận được:', CreateNotificationDto);
-    const result = await this.notificationService.create(body);
+  async create(@Body() body: CreateReferralDto): Promise<any> {
+    const result = await this.referralService.create(body);
 
     return result;
   }
@@ -66,9 +65,9 @@ export default class NotificationController {
   @HttpCode(200)
   async update(
     @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
-    @Body() body: UpdateNotificationDto,
+    @Body() body: UpdateReferralDto,
   ): Promise<any> {
-    const result = await this.notificationService.updateOneById(id, body);
+    const result = await this.referralService.updateOneById(id, body);
 
     return result;
   }
@@ -82,7 +81,7 @@ export default class NotificationController {
   @Delete(':ids/ids')
   // @HttpCode(204)
   async deleteManyByIds(@Param('ids') ids: string): Promise<any> {
-    const result = await this.notificationService.deleteManyHardByIds(
+    const result = await this.referralService.deleteManyHardByIds(
       ids.split(',').map((item: any) => new Types.ObjectId(item)),
     );
     return result;
@@ -99,7 +98,7 @@ export default class NotificationController {
   async delete(
     @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
   ): Promise<any> {
-    const result = await this.notificationService.deleteOneHardById(id);
+    const result = await this.referralService.deleteOneHardById(id);
 
     return result;
   }
@@ -113,7 +112,7 @@ export default class NotificationController {
   @Get('paginate')
   @HttpCode(200)
   async paginate(@ApiQueryParams() query: AqpDto): Promise<any> {
-    return this.notificationService.paginate(query);
+    return this.referralService.paginate(query);
   }
 
   /**
@@ -127,7 +126,7 @@ export default class NotificationController {
   async findOneBy(
     @ApiQueryParams() { filter, projection }: AqpDto,
   ): Promise<any> {
-    return this.notificationService.findOneBy(filter, {
+    return this.referralService.findOneBy(filter, {
       filter,
       projection,
     });
@@ -145,7 +144,7 @@ export default class NotificationController {
     @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
     @ApiQueryParams('population') populate: AqpDto,
   ): Promise<any> {
-    const result = await this.notificationService.findOneById(id, { populate });
+    const result = await this.referralService.findOneById(id, { populate });
 
     if (!result) throw new NotFoundException('The item does not exist');
 

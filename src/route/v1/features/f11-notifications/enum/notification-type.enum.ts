@@ -1,9 +1,4 @@
 export enum NotificationType {
-  personal = 'PERSONAL',
-  all = 'ALL',
-  newfeed = 'NEWFEED',
-  follower = 'FOLLOWER',
-
   // APP CUSTOMER
   order_success = 'ORDER_SUCCESS',
   shipper_confirm = 'SHIPPER_CONFIRM',

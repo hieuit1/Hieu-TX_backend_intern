@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { NotificationType } from '../enum/notification-type.enum';
 
-@Schema({ timestamps: true, versionKey: false, collection: 'products' })
+@Schema({ timestamps: true, versionKey: false, collection: 'notifications' })
 export class Notification {
   @Prop({ type: String, ref: 'User', required: true })
   senderId: string;
@@ -9,15 +9,11 @@ export class Notification {
   @Prop({ type: String, ref: 'User', required: true })
   recipientId: string;
 
-  @Prop({
-    type: String,
-    enum: NotificationType,
-    default: NotificationType.personal,
-  })
+  @Prop({ type: String, enum: NotificationType })
   notificationType: NotificationType;
 
-  @Prop({ type: String, default: '' })
-  entityName?: string;
+  @Prop({ type: String })
+  entityName: string;
 
   @Prop({ type: String, required: true })
   entityId: string;
@@ -36,6 +32,12 @@ export class Notification {
 
   @Prop({ type: Object, default: {} })
   options: Record<string, any>;
+
+  @Prop({ type: String, default: '' })
+  titleEn: string;
+
+  @Prop({ type: String, default: '' })
+  descriptionEn: string;
 }
 
 export type NotificationDocument = Notification & Document;
