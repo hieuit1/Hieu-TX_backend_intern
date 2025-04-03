@@ -17,7 +17,7 @@ import { BulkDiscountDto } from './bulk-discountDto.discount.dto';
 export default class CreateDiscountDto {
   @IsMongoId()
   @IsNotEmpty()
-  catertorId: string;
+  creatorId: string;
 
   @IsString()
   @IsNotEmpty()
@@ -53,7 +53,7 @@ export default class CreateDiscountDto {
 
   @IsNumber()
   @IsNotEmpty()
-  validTo: Number; // thời gian kết thúc
+  validTo: number; // thời gian kết thúc
 
   @IsNumber()
   @IsOptional()
@@ -65,7 +65,7 @@ export default class CreateDiscountDto {
 
   @IsNumber()
   @IsOptional()
-  maxUsesPerUserser?: number;
+  maxUsesPerUser?: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -85,7 +85,7 @@ export default class CreateDiscountDto {
 
   @IsArray()
   @IsOptional()
-  skuIds?: string;
+  skuIds?: string[];
 
   @IsBoolean()
   @IsOptional()

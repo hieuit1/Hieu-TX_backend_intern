@@ -6,9 +6,9 @@ import { DiscountType } from '../enum/discount-type.enum';
 @Schema({ timestamps: true, versionKey: false, collection: 'discounts' })
 export class Discount {
   @Prop({ type: String, ref: 'User', required: true })
-  catertorId: string;
+  creatorId: string;
 
-  @Prop({ type: String, require: true, unique: true })
+  @Prop({ type: String, required: true, unique: true })
   code: string;
 
   @Prop({ type: String, required: true })
@@ -33,7 +33,7 @@ export class Discount {
   validFrom: number; // thời gian bắt đầu
 
   @Prop({ type: Number, required: true })
-  validTo: Number; // thời gian kết thúc
+  validTo: number; // thời gian kết thúc
 
   @Prop({ type: Number, default: 0 })
   maxUses: number;
@@ -42,7 +42,7 @@ export class Discount {
   usersUsed: string[];
 
   @Prop({ type: Number, default: 1 })
-  maxUsesPerUserser: number;
+  maxUsesPerUser: number;
 
   @Prop({ type: Number, default: 0 })
   minOrderValue: number;
@@ -57,7 +57,7 @@ export class Discount {
   productIds: string[];
 
   @Prop({ type: [String], ref: 'Sku', default: [] })
-  skuIds: string;
+  skuIds: string[];
 
   @Prop({ type: Boolean, default: false })
   isSendNotification: boolean;
@@ -67,10 +67,13 @@ export class Discount {
 
   @Prop({ type: String })
   descriptionEn: string;
-
   @Prop({
     type: [
-      { minQuantity: Number, discountValue: Number, maxDiscountValue: Number },
+      {
+        minQuantity: { type: Number, required: true },
+        discountValue: { type: Number, required: true },
+        maxDiscountValue: { type: Number, default: 0 },
+      },
     ],
     default: [],
   })
