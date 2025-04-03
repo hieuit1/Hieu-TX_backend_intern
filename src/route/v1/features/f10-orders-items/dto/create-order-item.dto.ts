@@ -1,25 +1,49 @@
-import { IsMongoId, IsNotEmpty, IsNumber, Min } from 'class-validator';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export default class CreateOrderItemDto {
-  @IsNotEmpty()
   @IsMongoId()
+  @IsNotEmpty()
   orderId: string;
 
-  @IsNotEmpty()
   @IsMongoId()
+  @IsNotEmpty()
   productId: string;
 
-  @IsNotEmpty()
   @IsMongoId()
+  @IsNotEmpty()
   skuId: string;
 
-  @IsNotEmpty()
+  @IsMongoId()
+  @IsOptional()
+  discountId?: string;
+
   @IsNumber()
-  @Min(1)
+  @IsNotEmpty()
   quantity: number;
 
-  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
+  note?: string;
+
   @IsNumber()
-  @Min(0)
-  price: number;
+  @IsNotEmpty()
+  basePrice: number;
+
+  @IsNumber()
+  @IsOptional()
+  discountAmount?: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  totalAmount: number;
+
+  @IsMongoId()
+  @IsNotEmpty()
+  shopId: string;
 }
