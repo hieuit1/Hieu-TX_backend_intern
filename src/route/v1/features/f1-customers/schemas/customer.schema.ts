@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Gender } from '../enum/gender.enum';
+import { Gender } from '../enums/gender.enum';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'customers' })
 export class Customer {

@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { BulkDiscountDto } from '../dto/bulk-discountDto.discount.dto';
-import { ApplyTo } from '../enum/apply-to.enum';
-import { DiscountType } from '../enum/discount-type.enum';
+import { ApplyTo } from '../enums/apply-to.enum';
+import { DiscountType } from '../enums/discount-type.enum';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'discounts' })
 export class Discount {

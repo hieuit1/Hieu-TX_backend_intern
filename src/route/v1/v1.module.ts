@@ -33,6 +33,10 @@ import CustomerModule from './features/f1-customers/customer.module';
 import OrderItemModule from './features/f10-orders-items/order-item.module';
 import ReferralModule from './features/f12-referrals/referral.module';
 import UserAddressModule from './features/f13-users-address/user-address.module';
+import BankModule from './features/f14-banks/bank.module';
+import UserBankModule from './features/f15-user-banks/user-bank.module';
+import BrandModule from './features/f16-brands/brand.module';
+import AttributeModule from './features/f17-attributes/attribute.module';
 import ShopModule from './features/f2-shop/shop.module';
 import ProductModule from './features/f3-products/product.module';
 import CategoryModule from './features/f4-categories/category.module';
@@ -92,6 +96,10 @@ const routes: Routes = [
       { path: '/customers', module: CustomerModule },
       { path: '/referrals', module: ReferralModule },
       { path: '/user-address', module: UserAddressModule },
+      { path: '/banks', module: BankModule },
+      { path: '/user-banks', module: UserBankModule },
+      { path: '/brands', module: BrandModule },
+      { path: '/attributes', module: AttributeModule },
     ],
   },
 ];
@@ -150,6 +158,10 @@ const imports = [
   CustomerModule,
   ReferralModule,
   UserAddressModule,
+  BankModule,
+  UserBankModule,
+  BrandModule,
+  AttributeModule,
 ];
 
 if (ShareFunction.checkIsConfigS3Storage()) {

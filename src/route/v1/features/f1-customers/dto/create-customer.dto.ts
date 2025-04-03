@@ -10,7 +10,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Gender } from '../enum/gender.enum';
+import { Gender } from '../enums/gender.enum';
 
 export default class CreateCustomerDto {
   @IsMongoId()

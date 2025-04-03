@@ -10,8 +10,8 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { ApplyTo } from '../enum/apply-to.enum';
-import { DiscountType } from '../enum/discount-type.enum';
+import { ApplyTo } from '../enums/apply-to.enum';
+import { DiscountType } from '../enums/discount-type.enum';
 import { BulkDiscountDto } from './bulk-discountDto.discount.dto';
 
 export default class CreateDiscountDto {
