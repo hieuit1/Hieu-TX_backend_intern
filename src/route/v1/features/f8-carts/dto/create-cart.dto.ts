@@ -1,14 +1,19 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsMongoId, IsNotEmpty, IsNumber, Min, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsMongoId,
+  IsNotEmpty,
+  ValidateNested,
+} from 'class-validator';
 import { ItemDto } from './cart-item.dto';
 
 export default class CreateCartDto {
   @IsNotEmpty()
   @IsMongoId()
-  userId: string;
+  customerId: string;
 
   @IsArray()
-  @ValidateNested({each: true})
+  @ValidateNested({ each: true })
   @Type(() => ItemDto)
-  items: ItemDto[]
+  items: ItemDto[];
 }

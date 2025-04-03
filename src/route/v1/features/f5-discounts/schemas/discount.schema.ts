@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { BulkDiscountDto } from '../dto/bulk-discountDto.discount.dto';
 import { ApplyTo } from '../enum/apply-to.enum';
 import { DiscountType } from '../enum/discount-type.enum';
 
@@ -77,11 +78,7 @@ export class Discount {
     ],
     default: [],
   })
-  bulkDiscount: {
-    minQuantity: number;
-    discountValue: number;
-    maxDiscountValue: number;
-  }[];
+  bulkDiscount: BulkDiscountDto[];
 }
 
 export type DiscountDocument = Discount & Document;

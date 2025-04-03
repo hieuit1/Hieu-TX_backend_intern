@@ -10,6 +10,10 @@ export default class AddItemDto {
   skuId: string;
 
   @IsNotEmpty()
+  @IsMongoId()
+  discountId: string;
+
+  @IsNotEmpty()
   @IsNumber()
   @Min(1)
   quantity: number;

@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Warranty, WarrantySchema } from './warranty.schema';
+import WarrantyDto from '../dto/warranty-product.dto';
+import { WarrantySchema } from './warranty.schema';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'products' })
 export class Product {
@@ -26,7 +27,7 @@ export class Product {
   video: string;
 
   @Prop({ type: [WarrantySchema], default: [] })
-  warranties: Warranty[];
+  warranties: WarrantyDto[];
 
   @Prop({ type: Number, default: 0 })
   viewsCount: number;

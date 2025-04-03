@@ -1,33 +1,60 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { AttributeDto } from './attribute.dto';
 
-
 export default class CreateSkuDto {
-  @IsNotEmpty()
   @IsMongoId()
+  @IsNotEmpty()
   productId: string;
 
-  @IsNotEmpty()
   @IsString()
-  name: string;
-
   @IsNotEmpty()
-  @IsNumber()
-  price: number;
+  skuCode: string;
 
+  @IsNumber()
   @IsNotEmpty()
-  @IsNumber()
-  stock: number;
+  originalPrice: number;
 
-  @IsOptional()
+  @IsNumber()
+  @IsNotEmpty()
+  basePrice: number;
+
   @IsArray()
+  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => AttributeDto)
   attributes?: AttributeDto[];
 
+  @IsNumber()
   @IsOptional()
+  quantity?: number;
+
+  @IsString()
+  @IsNotEmpty()
+  thumbnail: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isDeleted?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
+
+  @IsNumber()
+  @IsOptional()
+  soldCount?: number;
+
   @IsArray()
-  @IsString({ each: true })
-  images?: string[];
+  @IsOptional()
+  image?: string[];
 }

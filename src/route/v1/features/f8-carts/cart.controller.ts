@@ -11,6 +11,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -18,6 +19,7 @@ import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
 import CartService from './cart.service';
 import AddItemDto from './dto/add-item.dto';
+import CreateCartDto from './dto/create-cart.dto';
 import UpdateCartDto from './dto/update-cart.dto';
 
 @ApiTags('Carts')
@@ -25,6 +27,33 @@ import UpdateCartDto from './dto/update-cart.dto';
 @Controller()
 export default class CartController {
   constructor(private readonly cartService: CartService) {}
+
+  /**
+   * Find all
+   *
+   * @param query
+   * @returns
+   */
+  @Get('')
+  @HttpCode(200)
+  async findAll(@Query() query: any): Promise<any> {
+    const result = await this.cartService.findManyBy(query);
+    return result;
+  }
+
+  /**
+   * Create
+   *
+   * @param body
+   * @returns
+   */
+  @Post('')
+  @HttpCode(201)
+  async create(@Body() body: CreateCartDto): Promise<any> {
+    const result = await this.cartService.create(body);
+
+    return result;
+  }
 
   /**
    * get my cart

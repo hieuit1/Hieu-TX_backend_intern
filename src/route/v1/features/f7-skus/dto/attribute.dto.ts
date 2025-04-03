@@ -1,12 +1,15 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class AttributeDto{
-  @IsNotEmpty()
+export class AttributeDto {
   @IsString()
-  name : string;
-  
   @IsNotEmpty()
-  @IsString()
-  value : string;
+  attributeId: string;
 
+  @IsString()
+  @IsNotEmpty()
+  attributeName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  value: string;
 }
