@@ -37,7 +37,10 @@ import BankModule from './features/f14-banks/bank.module';
 import UserBankModule from './features/f15-user-banks/user-bank.module';
 import BrandModule from './features/f16-brands/brand.module';
 import AttributeModule from './features/f17-attributes/attribute.module';
+import FlashSaleModule from './features/f18-flash-sales/flash-sale.module';
+import ShopVoucherModule from './features/f19-shop-vouchers/shop-voucher.module';
 import ShopModule from './features/f2-shop/shop.module';
+import ReviewModule from './features/f20-reviews/review.module';
 import ProductModule from './features/f3-products/product.module';
 import CategoryModule from './features/f4-categories/category.module';
 import DiscountModule from './features/f5-discounts/discount.module';
@@ -100,6 +103,9 @@ const routes: Routes = [
       { path: '/user-banks', module: UserBankModule },
       { path: '/brands', module: BrandModule },
       { path: '/attributes', module: AttributeModule },
+      { path: '/flash-sales', module: FlashSaleModule },
+      { path: '/shop-vouchers', module: ShopVoucherModule },
+      { path: '/reviews', module: ReviewModule },
     ],
   },
 ];
@@ -162,6 +168,9 @@ const imports = [
   UserBankModule,
   BrandModule,
   AttributeModule,
+  FlashSaleModule,
+  ShopVoucherModule,
+  ReviewModule,
 ];
 
 if (ShareFunction.checkIsConfigS3Storage()) {
