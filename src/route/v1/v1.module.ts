@@ -41,6 +41,10 @@ import FlashSaleModule from './features/f18-flash-sales/flash-sale.module';
 import ShopVoucherModule from './features/f19-shop-vouchers/shop-voucher.module';
 import ShopModule from './features/f2-shop/shop.module';
 import ReviewModule from './features/f20-reviews/review.module';
+import NewModule from './features/f21-news/new.module';
+import ConversationModule from './features/f22-conversations/conversation.module';
+import MessageModule from './features/f23-messages/message.module';
+import BrancheModule from './features/f24-branches/branche.module';
 import ProductModule from './features/f3-products/product.module';
 import CategoryModule from './features/f4-categories/category.module';
 import DiscountModule from './features/f5-discounts/discount.module';
@@ -106,6 +110,10 @@ const routes: Routes = [
       { path: '/flash-sales', module: FlashSaleModule },
       { path: '/shop-vouchers', module: ShopVoucherModule },
       { path: '/reviews', module: ReviewModule },
+      { path: '/news', module: NewModule },
+      { path: '/conversations', module: ConversationModule },
+      { path: '/messages', module: MessageModule },
+      { path: '/branches', module: BrancheModule },
     ],
   },
 ];
@@ -171,6 +179,10 @@ const imports = [
   FlashSaleModule,
   ShopVoucherModule,
   ReviewModule,
+  NewModule,
+  ConversationModule,
+  MessageModule,
+  BrancheModule,
 ];
 
 if (ShareFunction.checkIsConfigS3Storage()) {
