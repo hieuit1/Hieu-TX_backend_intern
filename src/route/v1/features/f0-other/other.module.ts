@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import OrderItemModule from '../f10-orders-items/order-item.module';
-import NotificationModule from '../f11-notifications/notification.module';
 import DiscountModule from '../f5-discounts/discount.module';
 import ShippingMethodModule from '../f6-shipping-methods/shipping-method.module';
 import SkuModule from '../f7-skus/sku.module';
@@ -26,7 +25,6 @@ import { Other, OtherSchema } from './schemas/other.schema';
     OrderModule,
     OrderItemModule,
     SkuModule,
-    NotificationModule,
   ],
   controllers: [OtherController],
   providers: [OtherService, OtherRepository],

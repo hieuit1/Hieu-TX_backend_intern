@@ -1,6 +1,6 @@
+import { LangEnum } from '@enum/lang.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { LanguageNewEnum } from '../enums/language-new.enum';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'news' })
 export class New {
@@ -22,8 +22,8 @@ export class New {
   @Prop({ type: Number, default: 0 })
   viewsCount: number;
 
-  @Prop({ type: String, enum: LanguageNewEnum, default: LanguageNewEnum.VI })
-  lang: LanguageNewEnum;
+  @Prop({ type: String, enum: LangEnum, default: LangEnum.vietnamese })
+  lang: LangEnum;
 }
 
 export type NewDocument = New & Document;

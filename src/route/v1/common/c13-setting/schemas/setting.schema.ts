@@ -1,56 +1,58 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
-import { StatisticLocked } from '../enum/statistic-locked.enum';
+import { Document } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Setting {
-  @Prop({ type: [Number], default: [] })
-  readonly appShowRate: number[];
-
-  @Prop({ type: [Number], default: [] })
-  readonly saveFileShowRate: number[];
-
   @Prop({ type: String, default: '' })
   readonly privacyPolicy: string;
 
-  @Prop({ type: String, default: '' })
-  readonly termsAndService: string;
+  @Prop({ type: String, required: true })
+  contactPhone: string;
 
   @Prop({ type: String, default: '' })
-  readonly androidAppId: string;
+  websiteLink: string;
 
   @Prop({ type: String, default: '' })
-  readonly iOSAppId: string;
+  facebookLink: string;
 
   @Prop({ type: String, default: '' })
-  readonly linkShareAndroid: string;
+  address: string;
 
   @Prop({ type: String, default: '' })
-  readonly linkShareIos: string;
-
-  @Prop({ type: Number, default: 2 })
-  readonly quantityAdsPerDay: number;
-
-  @Prop({ type: mongoose.SchemaTypes.Mixed, default: {} })
-  readonly other: any;
-
-  @Prop({ type: Number, default: 0 })
-  premiumTrialDays: number;
+  returnPolicy: string;
 
   @Prop({ type: String, default: '' })
-  contactEmail: string;
+  purchasePolicy: string;
 
   @Prop({ type: String, default: '' })
-  logo: string;
+  warrantyPolicy: string;
 
   @Prop({ type: String, default: '' })
-  appName: string;
-
-  @Prop({ type: [{ type: String, enum: StatisticLocked }], default: [] })
-  statisticsIsLocked: StatisticLocked[];
+  buyingGuide: string;
 
   @Prop({ type: String, default: '' })
-  themeDefaultId: string;
+  transferInformation: string;
+
+  @Prop({ type: String, default: '' })
+  referralPrice: string;
+
+  @Prop({ type: String, default: '' })
+  privacyPolicyEn: string;
+
+  @Prop({ type: String, default: '' })
+  returnPolicyEn: string;
+
+  @Prop({ type: String, default: '' })
+  purchasePolicyEn: string;
+
+  @Prop({ type: String, default: '' })
+  warrantyPolicyEn: string;
+
+  @Prop({ type: String, default: '' })
+  buyingGuideEn: string;
+
+  @Prop({ type: String, default: '' })
+  transferInformationEn: string;
 }
 
 export type SettingDocument = Setting & Document;

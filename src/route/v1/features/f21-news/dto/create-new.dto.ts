@@ -1,3 +1,4 @@
+import { LangEnum } from '@enum/lang.enum';
 import {
   IsEnum,
   IsMongoId,
@@ -6,7 +7,6 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { LanguageNewEnum } from '../enums/language-new.enum';
 
 export default class CreateNewDto {
   @IsMongoId()
@@ -34,7 +34,7 @@ export default class CreateNewDto {
   viewsCount?: number;
 
   @IsString()
-  @IsEnum(LanguageNewEnum)
+  @IsEnum(LangEnum)
   @IsOptional()
-  lang?: LanguageNewEnum;
+  lang?: LangEnum;
 }

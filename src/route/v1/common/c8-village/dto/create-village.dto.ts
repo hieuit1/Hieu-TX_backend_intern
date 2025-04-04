@@ -1,24 +1,23 @@
-import { IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Types } from 'mongoose';
+import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export default class CreateVillageDto {
-  @IsOptional()
+  @IsNotEmpty()
   @IsMongoId()
-  readonly idProvince: Types.ObjectId;
+  readonly provinceId: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsMongoId()
-  readonly idDistrict: Types.ObjectId;
+  readonly districtId: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   readonly name: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   readonly slug: string;
 
+  @IsString()
   @IsOptional()
-  @IsNumber()
-  position: number;
+  type?: string;
 }

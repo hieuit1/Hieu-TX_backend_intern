@@ -1,5 +1,4 @@
 import BaseRepository from '@base-inherit/base.repository';
-import CreateNotificationDto from '@common/c12-notification/dto/create-notification.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginateModel } from 'mongoose';
@@ -20,9 +19,9 @@ export default class NotificationRepository extends BaseRepository<NotificationD
   }
 
   // create many
-  async createMany(
-    data: CreateNotificationDto[],
-  ): Promise<NotificationDocument[]> {
-    return await this.notificationModel.insertMany(data);
-  }
+  // async createMany(
+  //   data: CreateNotificationDto[],
+  // ): Promise<NotificationDocument[]> {
+  //   return await this.notificationModel.insertMany(data);
+  // }
 }

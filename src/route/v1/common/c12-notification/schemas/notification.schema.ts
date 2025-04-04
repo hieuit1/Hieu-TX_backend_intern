@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { EntityType } from '../enum/entity-type.enum';
 import { NotificationType } from '../enum/notification-type.enum';
-import { ThumbnailType } from '../enums/thumbnail-type';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Notification {
@@ -15,16 +13,9 @@ export class Notification {
   @Prop({
     type: String,
     enum: NotificationType,
-    default: NotificationType.personal,
+    required: true,
   })
   type: NotificationType;
-
-  @Prop({
-    type: String,
-    enum: EntityType,
-    default: EntityType.empty,
-  })
-  entityType: EntityType;
 
   @Prop({ type: String })
   entityId: string;
@@ -61,8 +52,17 @@ export class Notification {
   @Prop({ type: String, default: '' })
   thumbnail: string;
 
-  @Prop({ type: String, enum: ThumbnailType })
-  readonly thumbnailType: ThumbnailType;
+  @Prop({ type: String })
+  entityName: string;
+
+  @Prop({ type: Object, default: {} })
+  options: Record<string, any>;
+
+  @Prop({ type: String, default: '' })
+  titleEn: string;
+
+  @Prop({ type: String, default: '' })
+  descriptionEn: string;
 }
 
 export type NotificationDocument = HydratedDocument<Notification>;

@@ -3,6 +3,10 @@ import { Document } from 'mongoose';
 import { TransactionMethodEnum } from '../enums/transaction-method.enum';
 import { TransactionStatusEnum } from '../enums/transaction-status.enum';
 import { TransactionTypeEnum } from '../enums/transaction-type.enum';
+import {
+  UserBankReceived,
+  UserBankReceivedSchema,
+} from './user-bank-received.schema';
 
 export interface MultipleLanguage {
   [key: string]: string;
@@ -10,44 +14,49 @@ export interface MultipleLanguage {
 
 @Schema({ timestamps: true, versionKey: false })
 export class Transaction {
-  @Prop({ type: String, ref: 'User' })
-  readonly userId: string;
+  @Prop({ type: String, ref: 'User', required: true })
+  readonly userFrom: string;
 
-  @Prop({ type: String })
-  readonly entityId: string;
+  @Prop({ type: String, ref: 'User' })
+  userTo?: string;
 
   @Prop({
     type: String,
     enum: TransactionTypeEnum,
-    default: TransactionTypeEnum.COMPLETED_MISSION,
+    default: TransactionTypeEnum.WITHDRAW,
   })
   readonly type: TransactionTypeEnum;
 
   @Prop({
     type: String,
     enum: TransactionMethodEnum,
-    default: TransactionMethodEnum.MONEY,
+    default: TransactionMethodEnum.TRANSFER,
   })
   readonly method: TransactionMethodEnum;
 
   @Prop({
     type: String,
     enum: TransactionStatusEnum,
-    default: TransactionStatusEnum.CHECKING,
+    default: TransactionStatusEnum.PENDING,
   })
   readonly status: TransactionStatusEnum;
 
-  @Prop({ type: Number, default: 0 })
-  readonly clovers: number;
+  @Prop({ type: String, required: true })
+  title: string;
 
-  @Prop({ type: Number, default: 0 })
-  readonly money: number;
+  @Prop({ type: Number, required: true })
+  money: number;
 
-  @Prop({ type: String, default: '' })
-  readonly options: string;
+  @Prop({ type: [String] })
+  image?: string[];
 
-  @Prop({ type: String, default: '' })
-  readonly transactionCode: string;
+  @Prop({ type: String })
+  content?: string;
+
+  @Prop({
+    type: UserBankReceivedSchema,
+  })
+  userBankReceived: UserBankReceived;
 }
 
 export type TransactionDocument = Transaction & Document;

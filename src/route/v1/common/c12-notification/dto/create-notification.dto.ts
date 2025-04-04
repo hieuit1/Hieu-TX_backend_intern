@@ -3,12 +3,11 @@ import {
   IsEnum,
   IsMongoId,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { EntityType } from '../enum/entity-type.enum';
 import { NotificationType } from '../enum/notification-type.enum';
-import { ThumbnailType } from '../enums/thumbnail-type';
 
 export default class CreateNotificationDto {
   @IsNotEmpty()
@@ -24,14 +23,11 @@ export default class CreateNotificationDto {
   type: NotificationType;
 
   @IsOptional()
-  @IsEnum(EntityType)
-  entityType: EntityType;
-
-  @IsOptional()
   @IsMongoId()
   entityId: string;
 
   @IsOptional()
+  @IsObject()
   title: {
     [key: string]: string;
   };
@@ -41,15 +37,27 @@ export default class CreateNotificationDto {
   isOpened: boolean;
 
   @IsOptional()
+  @IsObject()
   description: {
     [key: string]: string;
   };
 
   @IsOptional()
+  options?: Record<string, any>;
+
   @IsString()
-  thumbnail: string;
+  @IsOptional()
+  entityName?: string;
 
   @IsOptional()
-  @IsEnum(ThumbnailType)
-  readonly thumbnailType: ThumbnailType;
+  @IsString()
+  thumbnail?: string;
+
+  @IsString()
+  @IsOptional()
+  titleEn?: string;
+
+  @IsString()
+  @IsOptional()
+  descriptionEn?: string;
 }

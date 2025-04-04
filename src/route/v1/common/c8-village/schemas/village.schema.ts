@@ -1,33 +1,30 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Document } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Village {
   @Prop({
-    type: MongooseSchema.Types.ObjectId,
+    type: String,
     ref: 'Province',
     required: true,
   })
-  idProvince: string;
+  provinceId: string;
 
   @Prop({
-    type: MongooseSchema.Types.ObjectId,
+    type: String,
     ref: 'District',
     required: true,
   })
-  idDistrict: string;
+  districtId: string;
 
   @Prop({ type: String, required: true })
   name: string;
 
   @Prop({ type: String })
-  type: string;
+  type?: string;
 
   @Prop({ type: String })
   slug: string;
-
-  @Prop({ type: Number, default: 0 })
-  position: number;
 }
 
 export type VillageDocument = Village & Document;

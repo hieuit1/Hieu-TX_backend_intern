@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { Language, languages } from 'src/util/lang/lang';
 import { NotificationTrans } from 'src/util/lang/notification-trans';
-import { ThumbnailType } from './enums/thumbnail-type';
+
 import NotificationRepository from './notification.repository';
 import { NotificationDocument } from './schemas/notification.schema';
 
@@ -38,7 +38,6 @@ export default class NotificationService extends BaseService<NotificationDocumen
       recipientId,
       title, // Object containing titles in all languages
       description, // Object containing descriptions in all languages
-      thumbnailType: ThumbnailType.clover,
     };
 
     await this.notificationRepository.create(notificationItem);
@@ -65,7 +64,6 @@ export default class NotificationService extends BaseService<NotificationDocumen
       recipientId,
       title, // Object containing titles in all languages
       description, // Object containing descriptions in all languages
-      thumbnailType: ThumbnailType.gift,
     };
 
     return await this.notificationRepository.create(notificationItem);
@@ -90,7 +88,6 @@ export default class NotificationService extends BaseService<NotificationDocumen
       recipientId,
       title, // Object containing titles in all languages
       description, // Object containing descriptions in all languages
-      thumbnailType: ThumbnailType.premium,
     };
 
     return await this.notificationRepository.create(notificationItem);

@@ -1,15 +1,15 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export default class CreateProvinceDto {
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   readonly name: string;
 
   @IsOptional()
   @IsString()
-  readonly slug: string;
+  readonly slug?: string;
 
-  @IsOptional()
-  @IsNumber()
-  position: number;
+  @IsString()
+  @IsNotEmpty()
+  type: string;
 }

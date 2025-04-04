@@ -1,20 +1,19 @@
-import { IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Types } from 'mongoose';
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 export default class CreateDistrictDto {
-  @IsOptional()
+  @IsNotEmpty()
   @IsMongoId()
-  readonly idProvince: Types.ObjectId;
+  readonly provinceId: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   readonly name: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   readonly slug: string;
 
-  @IsOptional()
-  @IsNumber()
-  position: number;
+  @IsString()
+  @IsNotEmpty()
+  readonly type: string;
 }

@@ -2,7 +2,6 @@ import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import OrderItemService from '../f10-orders-items/order-item.service';
-import NotificationService from '../f11-notifications/notification.service';
 import DiscountService from '../f5-discounts/discount.service';
 import ShippingMethodService from '../f6-shipping-methods/shipping-method.service';
 import SkuService from '../f7-skus/sku.service';
@@ -24,7 +23,6 @@ export default class OtherService extends BaseService<OtherDocument> {
     readonly orderItemService: OrderItemService,
     readonly cartReponsitory: CartRepository,
     readonly skuService: SkuService,
-    readonly notificationService: NotificationService,
   ) {
     super(logger, otherRepository);
   }

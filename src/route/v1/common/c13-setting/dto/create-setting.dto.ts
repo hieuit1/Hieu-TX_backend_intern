@@ -1,74 +1,71 @@
-import {
-  IsArray,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
-import { StatisticLocked } from '../enum/statistic-locked.enum';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export default class CreateSettingDto {
-  @IsArray()
-  @IsNumber({}, { each: true })
-  readonly appShowRate: [];
-
-  @IsOptional()
-  @IsString()
-  readonly androidAppId: string;
-
-  @IsOptional()
-  @IsString()
-  readonly iOSAppId: string;
-
-  @IsOptional()
-  @IsString()
-  readonly linkShareAndroid: string;
-
-  @IsOptional()
-  @IsString()
-  readonly linkShareIos: string;
-
-  @IsArray()
-  @IsNumber({}, { each: true })
-  readonly saveFileShowRate: [];
-
   @IsOptional()
   @IsString()
   readonly privacyPolicy: string;
 
-  @IsOptional()
   @IsString()
-  readonly termsAndService: string;
-
-  @IsOptional()
-  @IsNumber()
-  readonly quantityAdsPerDay: number;
-
-  @IsOptional()
-  readonly other: any;
-
-  @IsOptional()
-  @IsNumber()
-  premiumTrialDays: number;
+  @IsNotEmpty()
+  contactPhone: string;
 
   @IsOptional()
   @IsString()
-  contactEmail: string;
+  websiteLink: string;
 
   @IsOptional()
   @IsString()
-  logo: string;
+  facebookLink: string;
 
   @IsOptional()
   @IsString()
-  appName: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsEnum(StatisticLocked, { each: true })
-  statisticsIsLocked: StatisticLocked[];
+  address: string;
 
   @IsOptional()
   @IsString()
-  themeDefaultId: string;
+  returnPolicy: string;
+
+  @IsOptional()
+  @IsString()
+  purchasePolicy: string;
+
+  @IsOptional()
+  @IsString()
+  warrantyPolicy: string;
+
+  @IsOptional()
+  @IsString()
+  buyingGuide: string;
+
+  @IsOptional()
+  @IsString()
+  transferInformation: string;
+
+  @IsOptional()
+  @IsString()
+  referralPrice: string;
+
+  @IsOptional()
+  @IsString()
+  privacyPolicyEn: string;
+
+  @IsOptional()
+  @IsString()
+  returnPolicyEn: string;
+
+  @IsOptional()
+  @IsString()
+  purchasePolicyEn: string;
+
+  @IsOptional()
+  @IsString()
+  warrantyPolicyEn: string;
+
+  @IsOptional()
+  @IsString()
+  buyingGuideEn: string;
+
+  @IsOptional()
+  @IsString()
+  transferInformationEn: string;
 }
