@@ -22,6 +22,7 @@ import { Request as ExpressRequest, Router } from 'express';
 import { Types } from 'mongoose';
 import CheckEmailExistDto from './dto/check-email-exist';
 import CreateUserDto from './dto/create-user.dto';
+import LoginDto from './dto/login.dto';
 import { UpdatePasswordByEmailDto } from './dto/update-password-by-email.dto';
 import { UpdatePassword } from './dto/update-password.dto';
 import { UpdateRolesDto } from './dto/update-roles.dto';
@@ -390,5 +391,17 @@ export default class UserController {
       populate: population,
       projection,
     });
+  }
+
+  /**
+   * login
+   * @param body
+   * @param id
+   * @returns
+   */
+  @Post('login')
+  @HttpCode(200)
+  async login(@Body() body: LoginDto): Promise<any> {
+    return this.userService.login(body);
   }
 }
