@@ -21,6 +21,7 @@ import argon2 from 'argon2';
 import { QueryOptions, Types } from 'mongoose';
 import CreateUserDto from './dto/create-user.dto';
 import LoginDto from './dto/login.dto';
+import RegisterDto from './dto/register.dto';
 import { UpdatePasswordByEmailDto } from './dto/update-password-by-email.dto';
 import { UpdateRolesDto } from './dto/update-roles.dto';
 import UpdateUserDto from './dto/update-user.dto';
@@ -431,6 +432,20 @@ export default class UserService extends BaseService<UserDocument> {
     return {
       message: 'Login successfully!',
       user,
+    };
+  }
+
+  async register(input: RegisterDto) {
+    const user = await this.userRepository.findOneBy({
+      $or: [{ phone: input.phone }, { email: input.email }],
+    });
+    if (user) throw new BadRequestException('User already exists!');
+
+    const registeredUser = await this.userRepository.create(input);
+
+    return {
+      message: 'Register successfully!',
+      user: registeredUser,
     };
   }
 }

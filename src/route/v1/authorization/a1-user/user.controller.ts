@@ -404,4 +404,16 @@ export default class UserController {
   async login(@Body() body: LoginDto): Promise<any> {
     return this.userService.login(body);
   }
+
+  /**
+   * register
+   * @param body
+   * @param id
+   * @returns
+   */
+  @Post('register')
+  @HttpCode(200)
+  async register(@Body() body: CreateUserDto): Promise<any> {
+    return this.userService.register(body);
+  }
 }
