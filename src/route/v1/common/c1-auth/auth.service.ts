@@ -8,6 +8,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import argon2 from 'argon2';
 import { Types } from 'mongoose';
 import ForgotPasswordDto from './dto/forgot-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -216,44 +217,36 @@ export default class AuthService {
     return this.otpService.sendOtpEmail({ email });
   }
 
-  /**
-   * Sign in with email and password
-   * @param data
-   * @returns
-   */
-  public async signIn(data: SignInDto): Promise<AuthTokenPayload> {
-    const { password, email, deviceID } = data;
-
-    // Get and check user exist by phone
-    const user = await this.userRepository.findOneBy({ email });
+  async signIn(input: SignInDto) {
+    const user = await this.userRepository.findByPhone(input.phone);
 
     if (!user)
       throw new NotFoundException('The account does not exist in the system.');
 
     if (user.isDeleted) {
       throw new NotFoundException(
-        'The account has been removed from the system.',
+        'The account has been removed fromt the system.',
       );
     }
+    // compate password
+    const comparePassword = await argon2.verify(user.password, input.password);
 
-    // compare password
-    const isValidPassword = await this.userRepository.checkPasswordById(
-      user._id,
-      password,
-    );
-
-    // Check valid password
-    if (!isValidPassword)
+    if (!comparePassword) {
       throw new BadRequestException('Incorrect phone or password.');
-
-    // if exist deviceID => update deviceID and fcmTokens
-    if (deviceID) {
-      await this.userService.addDeviceID(user._id, deviceID);
-      user.deviceID = deviceID;
     }
 
-    // return authTokens
-    return this.generateAuthTokens(user);
+    // if exist deviceID => update deviceID and fcmTokens
+    if (input.deviceID) {
+      await this.userService.addDeviceID(user._id, input.deviceID);
+      user.deviceID = input.deviceID;
+    }
+
+    const updatedUser = await this.userRepository.findByPhone(user.phone);
+
+    return {
+      message: 'Login successfully',
+      updatedUser,
+    };
   }
 
   /**

@@ -1,5 +1,4 @@
 import {
-  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -9,8 +8,8 @@ import {
 
 export default class SignInDto {
   @IsNotEmpty()
-  @IsEmail()
-  email: string;
+  @IsString()
+  phone: string;
 
   @Length(6, 50)
   @IsNotEmpty()
@@ -20,8 +19,4 @@ export default class SignInDto {
   @IsOptional()
   @MinLength(12)
   deviceID?: string;
-
-  @IsOptional()
-  @IsString()
-  fullName: string;
 }
