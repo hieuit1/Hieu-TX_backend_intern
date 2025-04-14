@@ -12,6 +12,7 @@ import argon2 from 'argon2';
 import { Types } from 'mongoose';
 import ForgotPasswordDto from './dto/forgot-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { resetPasswordDto } from './dto/reset-password.dto';
 import SignInDto from './dto/sign-in.dto';
 import SignupDto from './dto/sign-up.dto';
 import SignInLocalDto from './dto/signin-local.dto';
@@ -319,5 +320,34 @@ export default class AuthService {
       refreshToken,
       user: newUser,
     };
+  }
+
+  public async resetPassword(input: resetPasswordDto, userId: string) {
+    const user = await this.userRepository.findOneById(userId);
+
+    if (!user)
+      throw new NotFoundException('The account does not exist in the system.');
+
+    if (user.isDeleted) {
+      throw new NotFoundException(
+        'The account has been removed from the system.',
+      );
+    }
+
+    // comfirm password
+    if (input.newPassword !== input.confirmPassword) {
+      throw new BadRequestException('Password does not match!');
+    }
+
+    // Hash password with argon2
+    const hashedPassword = await argon2.hash(input.newPassword);
+
+    // Update user password
+    const result = await this.userRepository.updateOneBy(
+      { _id: userId },
+      { password: hashedPassword },
+    );
+
+    return { result, message: 'Reset password successfully' };
   }
 }

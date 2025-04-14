@@ -15,6 +15,7 @@ import { Types } from 'mongoose';
 import AuthService from './auth.service';
 import ForgotPasswordDto from './dto/forgot-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { resetPasswordDto } from './dto/reset-password.dto';
 import SignInDto from './dto/sign-in.dto';
 import SignupDto from './dto/sign-up.dto';
 import SignInLocalDto from './dto/signin-local.dto';
@@ -62,6 +63,20 @@ export default class AuthController {
   @Post('forgot-password')
   async forgotPassword(@Body() body: ForgotPasswordDto) {
     return this.authService.forgotPassword(body);
+  }
+
+  /**
+   * Reset password
+   *
+   * @param userId
+   * @returns
+   */
+  @Post('reset-password/:id')
+  async resetPassword(
+    @Body() body: resetPasswordDto,
+    @Param('id') userId: string,
+  ) {
+    return this.authService.resetPassword(body, userId);
   }
 
   /**
