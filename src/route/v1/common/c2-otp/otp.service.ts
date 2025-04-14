@@ -164,29 +164,19 @@ export default class OtpService extends BaseService<OtpDocument> {
     return true;
   }
 
-  /**
-   * Verify otp by phone
-   * @param data VerifyOtpPhoneDto
-   * @returns Promise<OtpDocument>
-   */
-  public async verifyOtpPhone(data: VerifyOtpPhoneDto): Promise<OtpDocument> {
-    const { otpCode, phone } = data;
-
-    const otpDoc = await this.otpRepository.findByPhone(phone);
-
-    // check expired otp
-    if (!otpDoc)
+  async verifyOtpPhone(data: VerifyOtpPhoneDto) {
+    //check phone exist
+    const optDoc = await this.otpRepository.findByPhone(data.phone);
+    if (!optDoc)
       throw new BadRequestException('Phone does not exist or OTP has expired!');
 
-    // Check is valid otpCode
-    const isValidOtpCode = await otpDoc.compareOtpCode(otpCode);
+    // check is valid otpCode
+    const isValidOtpCode = await optDoc.compareOtpCode(data.otpCode);
     if (!isValidOtpCode) throw new BadRequestException('Invalid otp code.');
 
-    // delete otp doc
     const deletedOpt = await this.otpRepository.deleteOneHardBy({
-      phone: otpDoc.phone,
+      phone: optDoc.phone,
     });
-
     return deletedOpt;
   }
 
