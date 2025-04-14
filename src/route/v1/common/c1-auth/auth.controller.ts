@@ -66,20 +66,6 @@ export default class AuthController {
   }
 
   /**
-   * Reset password
-   *
-   * @param userId
-   * @returns
-   */
-  @Post('reset-password/:id')
-  async resetPassword(
-    @Body() body: resetPasswordDto,
-    @Param('id') userId: string,
-  ) {
-    return this.authService.resetPassword(body, userId);
-  }
-
-  /**
    *Sign in with account local
    * @param body
    * @returns
@@ -145,5 +131,19 @@ export default class AuthController {
   @Put('refresh-token')
   async refreshToken(@Body() { refreshToken }: RefreshTokenDto) {
     return this.authService.refreshToken({ refreshToken });
+  }
+
+  /**
+   * Reset password
+   *
+   * @param userId
+   * @returns
+   */
+  @Put('reset-password/:id')
+  async resetPassword(
+    @Body() body: resetPasswordDto,
+    @Param('id') userId: string,
+  ) {
+    return this.authService.resetPassword(body, userId);
   }
 }
