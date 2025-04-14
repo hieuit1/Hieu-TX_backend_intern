@@ -195,26 +195,18 @@ export default class AuthService {
     return this.generateAuthTokens(newUser);
   }
 
-  /**
-   * Forgot password
-   *
-   * @param data
-   */
-  public async forgotPassword({ email }: ForgotPasswordDto) {
-    // check email has exist in store
-    const user = await this.userService.findOneBy({ email });
+  public async forgotPassword(phone: ForgotPasswordDto) {
+    const user = await this.userRepository.findOneBy(phone);
 
-    if (!user) throw new NotFoundException('Invalid email');
-
-    // check user has been deleted
+    if (!user) {
+      throw new NotFoundException('this users is not exist in system');
+    }
     if (user.isDeleted) {
-      throw new NotFoundException(
-        'The account has been removed from the system.',
-      );
+      throw new NotFoundException('the account has remove fronm the system');
     }
 
-    // Send OTP
-    return this.otpService.sendOtpEmail({ email });
+    // send otp
+    return this.otpService.sendOtpByPhone({ phone: user.phone });
   }
 
   public async signIn(input: SignInDto) {
@@ -280,49 +272,6 @@ export default class AuthService {
       message: 'create successfully',
     };
   }
-
-  // public async signup(data: SignupDto): Promise<AuthTokenPayload> {
-  //   const { email, deviceID, otpCode, password, ...rest } = data;
-
-  //   // require email and password
-  //   if (!email || !password)
-  //     throw new BadRequestException('Email and password are required.');
-
-  //   // validate user
-  //   const userExist = await this.userService.validateUser({ email });
-
-  //   if (userExist && !userExist.isDeleted)
-  //     throw new BadRequestException('Account already exists in the system.');
-
-  //   // verify otpCode by email
-  //   await this.otpService.verifyOtpEmail({ email, otpCode });
-
-  //   // user item
-  //   const userItem = {
-  //     ...rest,
-  //     deleted: false,
-  //     email,
-  //     deviceID,
-  //     password,
-  //     fcmTokens: deviceID ? [deviceID] : [],
-  //   };
-
-  //   // if user has been deleted => update deleted = false
-  //   if (userExist && userExist.isDeleted) {
-  //     const userUpdated = await this.userService.updateOneById(
-  //       userExist._id,
-  //       userItem,
-  //     );
-
-  //     // generate auth tokens
-  //     return this.generateAuthTokens(userUpdated);
-  //   }
-
-  //   // create new user
-  //   const newUser = await this.userRepository.create(userItem);
-
-  //   return this.generateAuthTokens(newUser);
-  // }
 
   /**
    * Refresh token
