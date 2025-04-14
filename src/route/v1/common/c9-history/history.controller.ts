@@ -128,4 +128,18 @@ export default class HistoryController {
 
     return result;
   }
+
+  @Get('search-history')
+  @HttpCode(200)
+  async getSearchHistory(): Promise<any> {
+    return this.historyService.findManyBy(
+      {
+        action: 'SEARCH',
+      },
+      {
+        sort: { createdAt: -1 },
+        limit: 5,
+      },
+    );
+  }
 }

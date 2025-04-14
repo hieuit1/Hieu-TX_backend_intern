@@ -1,3 +1,4 @@
+import HistoryService from '@common/c9-history/history.service';
 import { ApiQueryParams } from '@decorator/api-query-params.decorator';
 import AqpDto from '@interceptor/aqp/aqp.dto';
 import WrapResponseInterceptor from '@interceptor/wrap-response.interceptor';
@@ -25,7 +26,10 @@ import ProductService from './product.service';
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly historyService: HistoryService,
+  ) {}
 
   /**
    * Find all
@@ -111,25 +115,66 @@ export default class ProductController {
    */
   @Get('paginate')
   @HttpCode(200)
-  async paginate(@ApiQueryParams() query: AqpDto): Promise<any> {
-
+  async paginate(
+    @ApiQueryParams() query: AqpDto,
+    /* @Query('userId') userId: string,*/
+  ): Promise<any> {
     //search product
-    const search = query.filter?.search?.trim(); 
+    const search = query.filter?.search?.trim();
     if (search) {
       delete query.filter.search;
       if (search) {
         query.filter = {
-            ...query.filter,
-            $text: { $search: search, $diacriticSensitive: true, $language: "english"}, // Full-text search
+          ...query.filter,
+          $text: {
+            $search: search,
+            $diacriticSensitive: true,
+            $language: 'english',
+          }, // Full-text search
         };
         query.projection = {
-            ...query.projection,
-            score: { $meta: 'textScore' }, 
+          ...query.projection,
+          score: { $meta: 'textScore' },
         };
+      }
+
+      // save history when search product
+      await this.historyService.create({
+        method: 'GET',
+        action: 'SEARCH',
+        url: search,
+        // idUser: userId,
+      });
     }
-    }
-  
+
     return this.productService.paginate(query);
+  }
+
+  @Get('search-history')
+  @HttpCode(200)
+  async getSearchHistory(): Promise<any> {
+    const history = await this.historyService.findManyBy(
+      { action: 'SEARCH' },
+      {
+        projection: { url: 1, _id: 0 },
+        sort: { createdAt: -1 },
+      },
+    );
+
+    const uniqueUrls: string[] = [];
+    const seen = new Set<string>();
+
+    for (const item of history) {
+      const url = item.url?.trim();
+      if (url && !seen.has(url)) {
+        seen.add(url);
+        uniqueUrls.push(url);
+      }
+
+      if (uniqueUrls.length >= 10) break; // Giới hạn 10 kết quả duy nhất
+    }
+
+    return uniqueUrls;
   }
 
   /**
