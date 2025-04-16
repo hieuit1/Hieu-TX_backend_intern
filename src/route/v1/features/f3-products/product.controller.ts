@@ -19,6 +19,7 @@ import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
 import CreateProductDto from './dto/create-product.dto';
+import { SearchFilterDto } from './dto/search-filter.dto';
 import UpdateProductDto from './dto/update-product.dto';
 import ProductService from './product.service';
 
@@ -150,6 +151,11 @@ export default class ProductController {
     return this.productService.paginate(query);
   }
 
+  @Get('filter')
+  filter(@Query() filterDto: SearchFilterDto) {
+    return this.productService.filterProducts(filterDto);
+  }
+
   @Get('search-history')
   @HttpCode(200)
   async getSearchHistory(): Promise<any> {
@@ -171,7 +177,7 @@ export default class ProductController {
         uniqueUrls.push(url);
       }
 
-      if (uniqueUrls.length >= 10) break; // Giới hạn 10 kết quả duy nhất
+      if (uniqueUrls.length >= 10) break; // Limit to 10 unique URLs
     }
 
     return uniqueUrls;
