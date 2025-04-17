@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { NotificationType } from '../enum/notification-type.enum';
+import { NotificationTypeDto } from '../enum/notification-type.enum';
 
 export default class CreateNotificationDto {
   @IsNotEmpty()
@@ -19,12 +19,12 @@ export default class CreateNotificationDto {
   recipientId: string;
 
   @IsOptional()
-  @IsEnum(NotificationType)
-  type: NotificationType;
+  @IsEnum(NotificationTypeDto)
+  type: NotificationTypeDto;
 
   @IsOptional()
   @IsMongoId()
-  entityId: string;
+  entityId?: string;
 
   @IsOptional()
   @IsObject()

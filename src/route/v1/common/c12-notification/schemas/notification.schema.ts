@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { NotificationType } from '../enum/notification-type.enum';
+import { NotificationTypeDto } from '../enum/notification-type.enum';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Notification {
@@ -12,10 +12,10 @@ export class Notification {
 
   @Prop({
     type: String,
-    enum: NotificationType,
+    enum: NotificationTypeDto,
     required: true,
   })
-  type: NotificationType;
+  type: NotificationTypeDto;
 
   @Prop({ type: String })
   entityId: string;

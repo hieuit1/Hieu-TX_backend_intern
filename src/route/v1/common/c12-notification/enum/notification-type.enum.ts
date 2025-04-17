@@ -1,4 +1,4 @@
-export enum NotificationType {
+export enum NotificationTypeDto {
   // APP CUSTOMER
   order_success = 'ORDER_SUCCESS',
   shipper_confirm = 'SHIPPER_CONFIRM',

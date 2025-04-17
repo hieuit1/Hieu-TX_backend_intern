@@ -19,6 +19,7 @@ import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
 import CreateNotificationDto from './dto/create-notification.dto';
 import UpdateNotificationDto from './dto/update-notification.dto';
+import { NotificationTypeDto } from './enum/notification-type.enum';
 import NotificationService from './notification.service';
 
 @ApiTags('Notifications')
@@ -73,6 +74,22 @@ export default class NotificationController {
   @Get('read/:id')
   async readNotification(@Param('id') id: string) {
     return this.notificationService.readNotification(id);
+  }
+
+  @Post('send-notification')
+  async sendNotification(
+    @Body()
+    body: {
+      recipientId: string;
+      senderId: string;
+      type: NotificationTypeDto;
+    },
+  ) {
+    return this.notificationService.sendNotification(
+      body.recipientId,
+      body.senderId,
+      body.type,
+    );
   }
 
   /**
