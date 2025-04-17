@@ -70,11 +70,8 @@ export default class NotificationController {
     return this.notificationService.updateOneById(id, body);
   }
 
-  @Put(':id/read')
-  @HttpCode(200)
-  async readNotification(
-    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
-  ): Promise<any> {
+  @Get('read/:id')
+  async readNotification(@Param('id') id: string) {
     return this.notificationService.readNotification(id);
   }
 
