@@ -108,6 +108,13 @@ export default class ProductController {
     return result;
   }
 
+  @Get(':productId/detail-product')
+  @HttpCode(200)
+  async getMyCart(@Param('productId') productId: string) {
+    // @GetCurrentUserId() userId: string
+    return this.productService.detailProduct(productId);
+  }
+
   /**
    * Paginate
    *
