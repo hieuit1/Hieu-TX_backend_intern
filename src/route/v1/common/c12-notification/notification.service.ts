@@ -150,7 +150,7 @@ export default class NotificationService extends BaseService<NotificationDocumen
       description: {
         vi: this.getNotificationDescription(type),
       },
-      isOpened: false,
+      isOpened: true,
     };
 
     return this.notificationRepository.create(dataNotification);

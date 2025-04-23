@@ -20,6 +20,7 @@ import { Types } from 'mongoose';
 import CartService from './cart.service';
 import AddItemDto from './dto/add-item.dto';
 import CreateCartDto from './dto/create-cart.dto';
+import EditItemDto from './dto/edit-item.dto';
 import UpdateCartDto from './dto/update-cart.dto';
 
 @ApiTags('Carts')
@@ -61,13 +62,33 @@ export default class CartController {
    * @param body
    * @returns
    */
-  @Get('users/:userId')
+  @Get('customer/:customerId')
   @HttpCode(200)
-  async getMyCart(@Param('userId', ParseObjectIdPipe) userId: string) {
+  async getMyCart(@Param('customerId', ParseObjectIdPipe) customerId: string) {
     // @GetCurrentUserId() userId: string
-    return this.cartService.getMyCart(userId);
+    return this.cartService.getMyCart(customerId);
   }
 
+  @Delete(':cartId')
+  @HttpCode(200)
+  async deleteMyCart(@Param('cartId', ParseObjectIdPipe) cartId: string) {
+    return this.cartService.deleteAllItem(cartId);
+  }
+
+  /**
+   * Edit item in cart
+   *
+   * @param body
+   * @returns
+   */
+  @Put(':cartId/edit-item')
+  @HttpCode(200)
+  async editItemInCart(
+    @Param('cartId', ParseObjectIdPipe) cartId: string,
+    @Body() body: EditItemDto,
+  ) {
+    return this.cartService.editItemInCart(cartId, body);
+  }
   /**
    * Add to cart
    *
@@ -89,7 +110,7 @@ export default class CartController {
    * @param body
    * @returns
    */
-  @Put('/:cartId/items/:itemId/remove')
+  @Put(':cartId/items/:itemId/remove')
   @HttpCode(200)
   async removeItemFromCart(
     @Param('cartId') cartId: string,
@@ -147,7 +168,6 @@ export default class CartController {
 
     return result;
   }
-
   /**
    * Paginate
    *
