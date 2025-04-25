@@ -11,7 +11,6 @@ export class Cart {
       type: {
         productId: { type: String, ref: 'Product' },
         skuId: { type: String, ref: 'Sku' },
-        discountId: { type: String, ref: 'Discount' },
         quantity: Number,
       },
     },

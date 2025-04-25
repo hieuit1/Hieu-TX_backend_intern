@@ -146,13 +146,13 @@ export default class ProductController {
         };
       }
 
-      // save history when search product
-      await this.historyService.create({
-        method: 'GET',
-        action: 'SEARCH',
-        url: search,
-        // idUser: userId,
-      });
+      // // save history when search product
+      // await this.historyService.create({
+      //   method: 'GET',
+      //   action: 'SEARCH',
+      //   url: search,
+      //   // idUser: userId,
+      // });
     }
 
     return this.productService.paginate(query);

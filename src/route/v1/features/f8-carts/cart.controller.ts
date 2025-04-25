@@ -7,7 +7,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -69,10 +68,13 @@ export default class CartController {
     return this.cartService.getMyCart(customerId);
   }
 
-  @Delete(':cartId')
+  @Put(':cartId')
   @HttpCode(200)
-  async deleteMyCart(@Param('cartId', ParseObjectIdPipe) cartId: string) {
-    return this.cartService.deleteAllItem(cartId);
+  async replaceMyCart(
+    @Param('cartId', ParseObjectIdPipe) cartId: string,
+    /*@Body() newItems: AddItemDto[],*/
+  ) {
+    return this.cartService.deleteAllItem(cartId /*newItems*/);
   }
 
   /**
@@ -81,13 +83,13 @@ export default class CartController {
    * @param body
    * @returns
    */
-  @Put(':cartId/edit-item')
+  @Put('items/:itemId/update')
   @HttpCode(200)
   async editItemInCart(
-    @Param('cartId', ParseObjectIdPipe) cartId: string,
+    @Param('itemId', ParseObjectIdPipe) itemId: string,
     @Body() body: EditItemDto,
   ) {
-    return this.cartService.editItemInCart(cartId, body);
+    return this.cartService.editItemInCart(itemId, body);
   }
   /**
    * Add to cart
@@ -95,10 +97,10 @@ export default class CartController {
    * @param body
    * @returns
    */
-  @Post('/:cartId/item')
+  @Post('customer/:custommerId/item')
   @HttpCode(200)
   async addItemToCart(
-    @Param('cartId', ParseObjectIdPipe) cartId: string,
+    @Param('custommerId', ParseObjectIdPipe) cartId: string,
     @Body() body: AddItemDto,
   ) {
     return this.cartService.addItemToCart(cartId, body);
@@ -110,13 +112,10 @@ export default class CartController {
    * @param body
    * @returns
    */
-  @Put(':cartId/items/:itemId/remove')
+  @Put('items/:itemId/remove')
   @HttpCode(200)
-  async removeItemFromCart(
-    @Param('cartId') cartId: string,
-    @Param('itemId') itemId: string,
-  ) {
-    const result = this.cartService.removeFromCart(cartId, itemId);
+  async removeItemFromCart(@Param('itemId', ParseObjectIdPipe) itemId: string) {
+    const result = this.cartService.removeFromCart(itemId);
     return result;
   }
 
@@ -135,21 +134,6 @@ export default class CartController {
   ): Promise<any> {
     const result = await this.cartService.updateOneById(id, body);
 
-    return result;
-  }
-
-  /**
-   * Delete hard many by ids
-   *
-   * @param ids
-   * @returns
-   */
-  @Delete(':ids/ids')
-  // @HttpCode(204)
-  async deleteManyByIds(@Param('ids') ids: string): Promise<any> {
-    const result = await this.cartService.deleteManyHardByIds(
-      ids.split(',').map((item: any) => new Types.ObjectId(item)),
-    );
     return result;
   }
 
@@ -187,41 +171,5 @@ export default class CartController {
     @Param('skuId') skuId: string,
   ) {
     return this.cartService.getProductInCart(userId, skuId);
-  }
-
-  /**
-   * Find one by ID
-   *
-   * @param id
-   * @returns
-   */
-  @Get('/one')
-  @HttpCode(200)
-  async findOneBy(
-    @ApiQueryParams() { filter, projection }: AqpDto,
-  ): Promise<any> {
-    return this.cartService.findOneBy(filter, {
-      filter,
-      projection,
-    });
-  }
-
-  /**
-   * Find one by ID
-   *
-   * @param id
-   * @returns
-   */
-  @Get(':id')
-  @HttpCode(200)
-  async findOneById(
-    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
-    @ApiQueryParams('population') populate: AqpDto,
-  ): Promise<any> {
-    const result = await this.cartService.findOneById(id, { populate });
-
-    if (!result) throw new NotFoundException('The item does not exist');
-
-    return result;
   }
 }

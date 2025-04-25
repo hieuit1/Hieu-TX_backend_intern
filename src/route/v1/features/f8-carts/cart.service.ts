@@ -1,7 +1,11 @@
 import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import FlashSaleRepository from '../f18-flash-sales/flash-sale.repository';
 import ProductService from '../f3-products/product.service';
+import DiscountRepository from '../f5-discounts/discount.repository';
+import { ApplyTo } from '../f5-discounts/enums/apply-to.enum';
+import { DiscountDocument } from '../f5-discounts/schemas/discount.schema';
 import CartRepository from './cart.repository';
 import AddItemDto from './dto/add-item.dto';
 import EditItemDto from './dto/edit-item.dto';
@@ -14,12 +18,14 @@ export default class CartService extends BaseService<CartDocument> {
     readonly cartRepository: CartRepository,
     readonly productService: ProductService,
     readonly skuRepository: ProductService,
+    readonly discountRepository: DiscountRepository,
+    readonly flashSaleRepository: FlashSaleRepository,
   ) {
     super(logger, cartRepository);
   }
 
   async getMyCart(customerId: string) {
-    const cart = await this.cartRepository.findOneBy(
+    const cart: CartDocument = await this.cartRepository.findOneBy(
       { customerId },
       {
         populate: [
@@ -32,16 +38,141 @@ export default class CartService extends BaseService<CartDocument> {
         ],
       },
     );
+    const nowInSeconds = Math.floor(Date.now() / 1000);
+
+    // filter flash sale
+    // const flashSale: FlashSaleDocument[] =
+    //   await this.flashSaleRepository.findManyBy({
+    //     validFrom: { $lte: nowInSeconds },
+    //     validTo: { $gte: nowInSeconds },
+    //     isActive: true,
+    //   });
+
+    //map key and value
+    // const skuFlashSaleMap = new Map<string, FlashSaleProduct>();
+    // const productFlashSaleMap = new Map<string, FlashSaleProduct>();
+
+    // flashSale.forEach(sale => sale.products.forEach((product) => {
+    //   if(){
+
+    //   }
+    // }))
+
+    // const mapFlaseSalse = flashSale.forEach(flashSale => )
+
+    // filter discount has uses
+    const discounts: DiscountDocument[] =
+      await this.discountRepository.findManyBy({
+        validFrom: { $lte: nowInSeconds },
+        validTo: { $gte: nowInSeconds },
+        maxUses: { $gt: 0 },
+        userUsed: { $nin: [customerId] },
+        isActive: true,
+      });
+
+    // apply to
+    // const validDiscount = discounts.filter((discount) => {
+    //   return (
+    //     discount.applyTo === ApplyTo.all ||
+    //     (discount.applyTo === ApplyTo.specific &&
+    //       discount.productIds.some((productId) =>
+    //         cart.items.some(
+    //           (item) => item.productId.toString() === productId.toString(),
+    //         ),
+    //       )) ||
+    //     discount.skuIds.some((skuId) =>
+    //       cart.items.some((item) => item.skuId.toString() === skuId.toString()),
+    //     )
+    //   );
+    // });
+
+    const validDiscount = discounts.filter((discount) => {
+      if (discount.applyTo === ApplyTo.all) return true;
+
+      if (discount.applyTo === ApplyTo.specific) {
+        const hasMatchingProduct = discount.productIds.some((productId) =>
+          cart.items.some((item) => {
+            const itemProductId =
+              (item.productId as any)?._id?.toString?.() ??
+              (item.productId as any)?.toString?.();
+            return itemProductId === productId.toString();
+          }),
+        );
+
+        const hasMatchingSku = discount.skuIds.some((skuId) =>
+          cart.items.some((item) => {
+            const itemSkuId =
+              (item.skuId as any)?._id?.toString?.() ??
+              (item.skuId as any)?.toString?.();
+            return itemSkuId === skuId.toString();
+          }),
+        );
+
+        return hasMatchingProduct || hasMatchingSku;
+      }
+
+      return false;
+    });
+
+    //map key : producntId and skuId and value : discount
+    const productDiscountMap = new Map<string, any>();
+    const skuDiscountMap = new Map<string, any>();
+
+    validDiscount.forEach((discount) => {
+      discount.productIds.forEach((productId) => {
+        productDiscountMap.set(productId.toString(), discount);
+      });
+
+      discount.skuIds.forEach((skuId) =>
+        skuDiscountMap.set(skuId.toString(), discount),
+      );
+    });
+
+    cart.items.forEach((item: any) => {
+      // find discount give productId and skuId
+
+      const productIdStr =
+        item.productId?._id?.toString?.() ?? item.productId?.toString?.();
+      const skuIdStr =
+        item.skuId?._id?.toString?.() ?? item.skuId?.toString?.();
+
+      const productDiscount = productDiscountMap.get(productIdStr);
+      const skuIdDiscount = skuDiscountMap.get(skuIdStr);
+
+      let discountToApply = null;
+
+      if (productDiscount) {
+        discountToApply = productDiscount;
+      } else if (skuIdDiscount) {
+        discountToApply = skuIdDiscount;
+      }
+
+      if (discountToApply) {
+        const originalPrice =
+          item.skuId?.basePrice ?? item.productId?.basePrice ?? 0;
+        let discountedPrice = originalPrice - discountToApply.discountValue;
+
+        if (discountToApply.maxDiscountValue > 0) {
+          const maxDiscount = originalPrice - discountToApply.maxDiscountValue;
+          discountedPrice = Math.max(discountedPrice, maxDiscount);
+        }
+
+        Object.assign(item, {
+          discountedPrice,
+          discountDetails: discountToApply,
+        });
+      }
+    });
 
     if (!cart) return this.cartRepository.create({ customerId, items: [] });
 
-    const totalPrice = await this.totalPriceInCart(cart);
-
-    return { cart, totalPrice };
+    return cart;
   }
 
-  async addItemToCart(cartId: string, input: AddItemDto) {
-    const cart: CartDocument = await this.cartRepository.findOneById(cartId);
+  async addItemToCart(customerId: string, input: AddItemDto) {
+    const cart: CartDocument = await this.cartRepository.findOneBy({
+      customerId,
+    });
 
     const itemIndex = cart.items.findIndex(
       (item) => item.productId == input.productId && item.skuId === input.skuId,
@@ -73,11 +204,11 @@ export default class CartService extends BaseService<CartDocument> {
     return cart;
   }
 
-  async removeFromCart(cartId: string, itemId: string) {
-    const cart = await this.cartRepository.findOneBy({ _id: cartId });
+  async removeFromCart(itemId: string) {
+    const cart = await this.cartRepository.findOneBy({ 'items._id': itemId });
 
     if (!cart) {
-      throw new NotFoundException('this cart does not exist');
+      throw new NotFoundException('this item does not exist');
     }
 
     const itemIndex = cart.items.findIndex(
@@ -93,7 +224,7 @@ export default class CartService extends BaseService<CartDocument> {
 
     await this.cartRepository.updateOneById(cart._id, { items: cart.items });
 
-    return { message: 'item has been reromve from the cart', cart };
+    return cart;
   }
 
   async removeCheckoutFromCart(userId: string, itemId: string) {
@@ -109,10 +240,6 @@ export default class CartService extends BaseService<CartDocument> {
         item.skuId.toString() === itemId,
     );
 
-    // if (itemIndex === -1) {
-    //   throw new NotFoundException(`Item ${itemId} not found in cart`);
-    // }
-
     // Xóa item khỏi giỏ hàng
     cart.items.splice(itemIndex, 1);
 
@@ -121,66 +248,37 @@ export default class CartService extends BaseService<CartDocument> {
     return { message: 'Item has been removed from the cart', cart };
   }
 
-  async deleteAllItem(cartId: string) {
-    const cart = await this.cartRepository.findOneBy({ _id: cartId });
+  async deleteAllItem(cartId: string /*newItems: AddItemDto[]*/) {
+    const cart = await this.cartRepository.findOneBy({
+      _id: cartId,
+    });
     if (!cart) {
       throw new NotFoundException('Cart does not exist for this user');
     }
-    // delete all items in cart
-    cart.items = [];
-    await this.cartRepository.updateOneById(cart._id, { items: cart.items });
 
-    return { message: 'All items have been removed from the cart', cart };
+    // cart.items = newItems;
+    // cart.items = [];
+    await this.cartRepository.updateOneById(cart._id, { items: [] });
+
+    return cart;
   }
 
-  async totalPriceInCart(cart: any) {
-    if (!cart) {
-      throw new NotFoundException('Cart does not exist for this user');
-    }
-    let totalPrice = 0;
-    for (const item of cart.items) {
-      if (item.isSelected === false) continue;
-
-      const sku = item.skuId;
-      if (sku && sku.basePrice) {
-        totalPrice += sku.basePrice * item.quantity;
-      } else {
-        this.logger.error(
-          `SKU not found or invalid basePrice for item: ${JSON.stringify(
-            item,
-          )}`,
-        );
-      }
-    }
-
-    return totalPrice;
-  }
-
-  async editItemInCart(cartId: string, input: EditItemDto) {
-    const cart = await this.cartRepository.findOneById(cartId);
-
-    if (!cart) {
-      throw new NotFoundException('Cart does not exist for this user');
-    }
+  async editItemInCart(itemId: string, input: EditItemDto) {
+    const cart: CartDocument = await this.cartRepository.findOneBy({
+      'items._id': itemId,
+    });
 
     const itemIndex = cart.items.findIndex(
-      (item: any) => item.skuId.toString() === input.skuId,
+      (item: any) => item._id.toString() === itemId,
     );
 
-    if (itemIndex === -1) {
-      throw new NotFoundException(`Item ${input.skuId} not found in cart`);
-    }
+    if (itemIndex === -1) throw new NotFoundException(`Item not found in cart`);
 
-    if (input.quantity) {
-      cart.items[itemIndex].quantity = input.quantity;
-    }
+    cart.items[itemIndex] = { ...cart.items[itemIndex], ...input };
 
-    if (input.isSelected !== undefined) {
-      cart.items[itemIndex].isSelected = input.isSelected;
-    }
-
+    // @ts-ignore'
     await this.cartRepository.updateOneById(cart._id, { items: cart.items });
 
-    return { message: 'Cart item has been updated', cart };
+    return cart;
   }
 }
