@@ -2,6 +2,8 @@ import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import FlashSaleRepository from '../f18-flash-sales/flash-sale.repository';
+import { FlashSaleProduct } from '../f18-flash-sales/schemas/flash-sale-products.schema';
+import { FlashSaleDocument } from '../f18-flash-sales/schemas/flash-sale.schema';
 import ProductService from '../f3-products/product.service';
 import DiscountRepository from '../f5-discounts/discount.repository';
 import { ApplyTo } from '../f5-discounts/enums/apply-to.enum';
@@ -40,25 +42,28 @@ export default class CartService extends BaseService<CartDocument> {
     );
     const nowInSeconds = Math.floor(Date.now() / 1000);
 
-    // filter flash sale
-    // const flashSale: FlashSaleDocument[] =
-    //   await this.flashSaleRepository.findManyBy({
-    //     validFrom: { $lte: nowInSeconds },
-    //     validTo: { $gte: nowInSeconds },
-    //     isActive: true,
-    //   });
+    //filter flash sale
+    const flashSale: FlashSaleDocument[] =
+      await this.flashSaleRepository.findManyBy({
+        validFrom: { $lte: nowInSeconds },
+        validTo: { $gte: nowInSeconds },
+        isActive: true,
+      });
 
     //map key and value
-    // const skuFlashSaleMap = new Map<string, FlashSaleProduct>();
-    // const productFlashSaleMap = new Map<string, FlashSaleProduct>();
+    const skuFlashSaleMap = new Map<string, FlashSaleProduct>();
+    const productFlashSaleMap = new Map<string, FlashSaleProduct>();
 
-    // flashSale.forEach(sale => sale.products.forEach((product) => {
-    //   if(){
-
-    //   }
-    // }))
-
-    // const mapFlaseSalse = flashSale.forEach(flashSale => )
+    flashSale.forEach((sale) =>
+      sale.products.forEach((product) => {
+        if (product.skuId) {
+          skuFlashSaleMap.set(product.skuId.toString(), product);
+        }
+        if (product.productId) {
+          productFlashSaleMap.set(product.productId.toString(), product);
+        }
+      }),
+    );
 
     // filter discount has uses
     const discounts: DiscountDocument[] =
@@ -71,21 +76,6 @@ export default class CartService extends BaseService<CartDocument> {
       });
 
     // apply to
-    // const validDiscount = discounts.filter((discount) => {
-    //   return (
-    //     discount.applyTo === ApplyTo.all ||
-    //     (discount.applyTo === ApplyTo.specific &&
-    //       discount.productIds.some((productId) =>
-    //         cart.items.some(
-    //           (item) => item.productId.toString() === productId.toString(),
-    //         ),
-    //       )) ||
-    //     discount.skuIds.some((skuId) =>
-    //       cart.items.some((item) => item.skuId.toString() === skuId.toString()),
-    //     )
-    //   );
-    // });
-
     const validDiscount = discounts.filter((discount) => {
       if (discount.applyTo === ApplyTo.all) return true;
 
@@ -136,18 +126,33 @@ export default class CartService extends BaseService<CartDocument> {
       const skuIdStr =
         item.skuId?._id?.toString?.() ?? item.skuId?.toString?.();
 
+      const productFlashSale = productFlashSaleMap.get(productIdStr);
+      const skuFlashSale = skuFlashSaleMap.get(skuIdStr);
+
       const productDiscount = productDiscountMap.get(productIdStr);
       const skuIdDiscount = skuDiscountMap.get(skuIdStr);
 
       let discountToApply = null;
-
       if (productDiscount) {
         discountToApply = productDiscount;
       } else if (skuIdDiscount) {
         discountToApply = skuIdDiscount;
       }
 
-      if (discountToApply) {
+      let flashSaleToApply = null;
+      if (skuFlashSale && skuFlashSale.soldCount < skuFlashSale.maxQuantity) {
+        flashSaleToApply = skuFlashSale;
+      } else if (
+        productFlashSale &&
+        productFlashSale.soldCount < productFlashSale.maxQuantity
+      ) {
+        flashSaleToApply = productFlashSale;
+      }
+
+      if (flashSaleToApply) {
+        item.discountedPrice = flashSaleToApply.flashSalePrice;
+        item.flashSaleDetails = flashSaleToApply;
+      } else if (discountToApply) {
         const originalPrice =
           item.skuId?.basePrice ?? item.productId?.basePrice ?? 0;
         let discountedPrice = originalPrice - discountToApply.discountValue;

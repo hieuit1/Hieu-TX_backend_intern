@@ -145,14 +145,6 @@ export default class ProductController {
           score: { $meta: 'textScore' },
         };
       }
-
-      // // save history when search product
-      // await this.historyService.create({
-      //   method: 'GET',
-      //   action: 'SEARCH',
-      //   url: search,
-      //   // idUser: userId,
-      // });
     }
 
     return this.productService.paginate(query);
