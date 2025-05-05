@@ -19,7 +19,6 @@ import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
 import CreateProductDto from './dto/create-product.dto';
-import { SearchFilterDto } from './dto/search-filter.dto';
 import UpdateProductDto from './dto/update-product.dto';
 import ProductService from './product.service';
 
@@ -115,44 +114,72 @@ export default class ProductController {
     return this.productService.detailProduct(productId);
   }
 
-  /**
-   * Paginate
-   *
-   * @param query
-   * @returns
-   */
   @Get('paginate')
   @HttpCode(200)
-  async paginate(
-    @ApiQueryParams() query: AqpDto,
-    /* @Query('userId') userId: string,*/
-  ): Promise<any> {
-    //search product
-    const search = query.filter?.search?.trim();
+  async paginate(@ApiQueryParams() query: AqpDto): Promise<any> {
+    const filter: any = {};
+    const search = query.search?.trim();
+
+    // Search (theo name, productCode, slug)
     if (search) {
-      delete query.filter.search;
-      if (search) {
-        query.filter = {
-          ...query.filter,
-          $text: {
-            $search: search,
-            $diacriticSensitive: true,
-            $language: 'english',
-          }, // Full-text search
-        };
-        query.projection = {
-          ...query.projection,
-          score: { $meta: 'textScore' },
-        };
-      }
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { productCode: { $regex: search, $options: 'i' } },
+        { slug: { $regex: search, $options: 'i' } },
+      ];
     }
 
-    return this.productService.paginate(query);
-  }
+    // Filter categoryIds
+    if (query.categoryIds) {
+      const ids = query.categoryIds.split(',').map((id: string) => id.trim());
+      filter.categoryIds = { $in: ids };
+    }
 
-  @Get('filter')
-  filter(@Query() filterDto: SearchFilterDto) {
-    return this.productService.filterProducts(filterDto);
+    // Filter brandId
+    if (query.brandId) {
+      filter.brandId = query.brandId.toString();
+    }
+
+    // Filter price (trên SKU)
+    const priceFilter: any = {};
+    if (query.minPrice !== undefined) {
+      priceFilter.$gte = Number(query.minPrice);
+    }
+    if (query.maxPrice !== undefined) {
+      priceFilter.$lte = Number(query.maxPrice);
+    }
+
+    const skuFilter: any = {};
+    if (Object.keys(priceFilter).length > 0) {
+      skuFilter.basePrice = priceFilter;
+    }
+
+    // Sort logic
+    let sort: any = { createdAt: -1 };
+
+    switch (query.sort) {
+      case 'createdAt':
+        sort = { createdAt: -1 };
+        break;
+      case 'viewsCount':
+        sort = { viewsCount: -1 };
+        break;
+      case 'soldCount':
+        sort = { soldCount: -1 };
+        break;
+      case 'minPrice':
+        sort = { 'sku.basePrice': 1 };
+        break;
+    }
+
+    const newQuery = {
+      ...query,
+      filter,
+      sort,
+      skuFilter,
+    };
+
+    return this.productService.paginate(newQuery);
   }
 
   @Get('search-history')
@@ -176,7 +203,7 @@ export default class ProductController {
         uniqueUrls.push(url);
       }
 
-      if (uniqueUrls.length >= 10) break; // Limit to 10 unique URLs
+      if (uniqueUrls.length >= 10) break;
     }
 
     return uniqueUrls;

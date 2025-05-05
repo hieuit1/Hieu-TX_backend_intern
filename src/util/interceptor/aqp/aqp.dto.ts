@@ -1,5 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsNumber, IsObject, IsOptional, IsString, Max } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  Max,
+} from 'class-validator';
 
 export default class AqpDto {
   @ApiPropertyOptional({
@@ -44,9 +51,29 @@ export default class AqpDto {
   })
   @IsArray()
   readonly population: any[] = [];
-  
-  // add search 
+
+  // add search
   @IsOptional()
   @IsString()
   search?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsOptional()
+  @IsString()
+  readonly brandId?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsOptional()
+  @IsString()
+  readonly categoryIds?: string; // comma-separated ids
+
+  @ApiPropertyOptional({ type: Number })
+  @IsOptional()
+  @IsNumber()
+  readonly minPrice?: number;
+
+  @ApiPropertyOptional({ type: Number })
+  @IsOptional()
+  @IsNumber()
+  readonly maxPrice?: number;
 }
