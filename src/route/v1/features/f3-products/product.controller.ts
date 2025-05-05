@@ -120,7 +120,7 @@ export default class ProductController {
     const filter: any = {};
     const search = query.search?.trim();
 
-    // Search (theo name, productCode, slug)
+    // Search
     if (search) {
       filter.$or = [
         { name: { $regex: search, $options: 'i' } },

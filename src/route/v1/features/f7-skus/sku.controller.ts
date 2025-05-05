@@ -18,6 +18,7 @@ import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
 import CreateSkuDto from './dto/create-sku.dto';
+import { SelectedAttributeDto } from './dto/select-attribute.dto';
 import UpdateSkuDto from './dto/update-sku.dto';
 import SkuService from './sku.service';
 
@@ -121,23 +122,6 @@ export default class SkuController {
    * @param id
    * @returns
    */
-  @Get('/one')
-  @HttpCode(200)
-  async findOneBy(
-    @ApiQueryParams() { filter, projection }: AqpDto,
-  ): Promise<any> {
-    return this.skuService.findOneBy(filter, {
-      filter,
-      projection,
-    });
-  }
-
-  /**
-   * Find one by ID
-   *
-   * @param id
-   * @returns
-   */
   @Get(':id')
   @HttpCode(200)
   async findOneById(
@@ -149,5 +133,20 @@ export default class SkuController {
     if (!result) throw new NotFoundException('The item does not exist');
 
     return result;
+  }
+
+  @Get('products/:productId/selectable-attributes')
+  async getSelectableAttributes(@Param('productId') productId: string) {
+    return this.skuService.getSelectableAttributes(productId);
+  }
+
+  // src/modules/sku/sku.controller.ts
+
+  @Post('find-sku')
+  async findSkuByAttributes(
+    @Body('productId') productId: string,
+    @Body('selectedAttrs') selectedAttrs: SelectedAttributeDto[],
+  ) {
+    return this.skuService.selectCategory(productId, selectedAttrs);
   }
 }

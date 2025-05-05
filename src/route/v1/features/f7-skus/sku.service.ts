@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+import { SelectedAttributeDto } from './dto/select-attribute.dto';
 import { SkuDocument } from './schemas/sku.schema';
 import SkuRepository from './sku.repository';
 
@@ -40,5 +41,53 @@ export default class SkuService extends BaseService<SkuDocument> {
       skuId,
       stock: sku.stock,
     };
+  }
+
+  // get attributes
+  async getSelectableAttributes(productId: string) {
+    const skus = await this.skuRepository.findManyBy({ productId });
+
+    const attributeMap: any = new Map<string, Set<string>>();
+
+    for (const sku of skus) {
+      for (const attr of sku.attributes) {
+        if (!attributeMap.has(attr.attributeName)) {
+          attributeMap.set(attr.attributeName, new Set());
+        }
+        attributeMap.get(attr.attributeName).add(attr.value);
+      }
+    }
+
+    const result = [];
+    for (const [attributeName, valueSet] of attributeMap.entries()) {
+      result.push({
+        attributeName,
+        values: Array.from(valueSet),
+      });
+    }
+
+    return result;
+  }
+
+  // take customer
+  async selectCategory(productId: string, selectAttrs: SelectedAttributeDto[]) {
+    const skus = await this.skuRepository.findManyBy({ productId });
+
+    if (!skus.length) {
+      throw new BadRequestException('No SKU found for this product');
+    }
+
+    for (const sku of skus) {
+      const matched = selectAttrs.every((selected) =>
+        sku.attributes.some(
+          (attr: any) =>
+            attr.attributeName === selected.attributeName &&
+            attr.value === selected.value,
+        ),
+      );
+      if (matched) return sku;
+    }
+
+    return null;
   }
 }
