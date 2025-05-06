@@ -1,10 +1,11 @@
 import BaseService from '@base-inherit/base.service';
 import CustomLoggerService from '@lazy-module/logger/logger.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import DiscountService from '../f5-discounts/discount.service';
 import ShippingMethodService from '../f6-shipping-methods/shipping-method.service';
 import CartRepository from '../f8-carts/cart.repository';
 import CartService from '../f8-carts/cart.service';
+import CheckoutReviewDto from './dto/checkout-review.dto';
 import OrderRepository from './order.repository';
 import { OrderDocument } from './schemas/order.schema';
 
@@ -21,25 +22,86 @@ export default class OrderService extends BaseService<OrderDocument> {
     super(logger, orderRepository);
   }
 
+  async checkoutReview(input: CheckoutReviewDto) {
+    // calc subTotal from orderItems
+    const subTotal = await this.calculteSubTotal(input.orderItems);
+
+    // shipping cost
+    const orderId = input.orderItems[0].orderId;
+    if (!orderId) {
+      throw new BadRequestException('orderId is missing in orderItems');
+    }
+
+    const costShipping = await this.getShippingCost(orderId);
+
+    // calc discountAmount
+    const discountId = input.orderItems[0].discountId;
+    if (!discountId) {
+      throw new BadRequestException('disscount is missing in orderItems');
+    }
+    const discountAmount = await this.discountService.caclDiscount(
+      discountId,
+      subTotal,
+    );
+
+    //calc totalAmount
+    const totalAmount = subTotal + costShipping - discountAmount;
+
+    return {
+      ...input,
+      checkout: {
+        subTotal: subTotal,
+        CostShipping: costShipping,
+        discountAmount: discountAmount,
+        totalAmount: totalAmount,
+      },
+    };
+  }
+
+  private async calculteSubTotal(items: CheckoutReviewDto['orderItems']) {
+    if (!items || !Array.isArray(items)) {
+      throw new BadRequestException('this item is not exist');
+    }
+
+    // using map tho create a new array items
+    const totalItem = items.map((item) => item.basePrice * item.quantity);
+    console.log(totalItem);
+
+    //using reduce to calculate subtotal
+    const subToTal = totalItem.reduce((total, amount) => total + amount);
+
+    return subToTal;
+  }
+
+  private async getShippingCost(orderId: string) {
+    const order = await this.orderRepository.findOneById(orderId);
+
+    if (!order) {
+      throw new BadRequestException('shipping is not exsist ');
+    }
+
+    return order.shippingInfo.price;
+  }
+
   // async checkoutReview(input: CheckoutReviewDto) {
   //   // calc subToTal from orderItems
   //   const subToTal = await this._calcSubtotal(input.orderItems);
 
   //   // calc discountAmount
-  //   let calculateDiscountAmount = 0;
-  //   if (input.discountId) {
-  //     const isExist = await this.discountService.isDiscountExist(
+  // let calculateDiscountAmount = 0;
+  // if (input.discountId) {
+  //   const isExist = await this.discountService.isDiscountExist(
+  //     input.discountId,
+  //   );
+  //   if (!isExist) {
+  //     throw new NotFoundException('this discount is not exist');
+  //   } else {
+  //     calculateDiscountAmount = await this.discountService.VoucherDiscount(
   //       input.discountId,
+  //       subToTal,
   //     );
-  //     if (!isExist) {
-  //       throw new NotFoundException('this discount is not exist');
-  //     } else {
-  //       calculateDiscountAmount = await this.discountService.VoucherDiscount(
-  //         input.discountId,
-  //         subToTal,
-  //       );
-  //     }
   //   }
+  // }
 
   //   // calc shipping cost
   //   let shippingCost = 0;

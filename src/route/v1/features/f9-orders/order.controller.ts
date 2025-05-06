@@ -17,6 +17,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import ParseObjectIdPipe from '@pipe/parse-object-id.pipe';
 import { Types } from 'mongoose';
+import CheckoutReviewDto from './dto/checkout-review.dto';
 import CreateOrderDto from './dto/create-order.dto';
 import UpdateOrderDto from './dto/update-order.dto';
 import OrderService from './order.service';
@@ -46,13 +47,13 @@ export default class OrderController {
    * @param body
    * @returns
    */
-  // @Post('checkout/review')
-  // @HttpCode(201)
-  // async chckoutReview(@Body() body: CheckoutReviewDto): Promise<any> {
-  //   const result = await this.orderService.checkoutReview(body);
+  @Post('checkout/review')
+  @HttpCode(201)
+  async chckoutReview(@Body() body: CheckoutReviewDto): Promise<any> {
+    const result = await this.orderService.checkoutReview(body);
 
-  //   return result;
-  // }
+    return result;
+  }
 
   /**
    * Create
